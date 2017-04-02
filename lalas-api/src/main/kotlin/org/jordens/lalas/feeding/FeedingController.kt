@@ -24,7 +24,13 @@ import org.apache.commons.csv.CSVFormat
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.web.bind.annotation.RequestParam
 import java.io.StringReader
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 
 @RestController
@@ -37,9 +43,16 @@ class FeedingController @Autowired constructor(val configuration: FeedingConfigu
   fun all(): List<Feeding> = feedings.get()
 
   @GetMapping("/byDay")
-  fun allByDay(): List<FeedingAggregate> {
+  fun allByDay(@RequestParam(value = "time", required = false) time: String?): List<FeedingAggregate> {
     // TODO-AJ: slightly more complicated ... should support specifying when a day starts
-    val feedingsByDay: MutableMap<String, MutableList<Feeding>> = feedings.get().groupByTo(mutableMapOf()) { it.date }
+    val feedingsByDay: MutableMap<String, MutableList<Feeding>> = feedings.get().groupByTo(mutableMapOf()) {
+      if (time != null && it.time < time) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        LocalDate.parse(it.date, formatter).minusDays(1).format(formatter)
+      } else {
+        it.date
+      }
+    }
 
     return feedingsByDay.map { f ->
       FeedingAggregate(f.key, f.value.sumBy { it.milkVolumeMilliliters })
