@@ -26,42 +26,51 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.RequestParam
 import java.io.StringReader
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 
 @RestController
 @RequestMapping(value = "/api/feedings")
 class FeedingController @Autowired constructor(val configuration: FeedingConfigurationProperties) {
   val logger = LoggerFactory.getLogger(FeedingController::class.java)
+  val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
   val feedings: AtomicReference<List<Feeding>> = AtomicReference(emptyList())
 
   @GetMapping("/")
   fun all(): List<Feeding> = feedings.get()
 
   @GetMapping("/byDay")
-  fun allByDay(@RequestParam(value = "time", required = false) time: String?): List<FeedingAggregate> {
-    // TODO-AJ: slightly more complicated ... should support specifying when a day starts
+  fun allByDay(@RequestParam(value = "time", required = false) time: String?,
+               @RequestParam(value = "sort", required = false, defaultValue = "date") sort: String): List<FeedingAggregate> {
     val feedingsByDay: MutableMap<String, MutableList<Feeding>> = feedings.get().groupByTo(mutableMapOf()) {
       if (time != null && it.time < time) {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         LocalDate.parse(it.date, formatter).minusDays(1).format(formatter)
       } else {
         it.date
       }
     }
 
-    return feedingsByDay.map { f ->
-      FeedingAggregate(f.key, f.value.sumBy { it.milkVolumeMilliliters })
-    }.sortedBy {
-      it.date
+    val feedings = feedingsByDay.map { f ->
+      FeedingAggregate(
+        f.key,
+        f.value.sumBy { it.milkVolumeMilliliters },
+        f.value.sumBy { it.diaperTypes.size },
+        f.value.sumBy { it.nursingDurationMinutes }
+      )
+    }
+
+    // figure out how to make a generic comparator based off of `sort`
+    when (sort) {
+      "milkVolumeMilliliters" -> return feedings.sortedByDescending { it.milkVolumeMilliliters }
+      "diaperCount" -> return feedings.sortedByDescending { it.diaperCount }
+      "nursingDurationMinutes" -> return feedings.sortedByDescending { it.nursingDurationMinutes }
+      else -> return feedings.sortedByDescending { it.date }
     }
   }
 
-  @Scheduled(fixedRate = 60000)
+  @Scheduled(fixedRate = 300000)
   fun fetchFeedings() {
     val sourceUrl = configuration.sourceAsUrl()
     logger.info("Fetching feedings from $sourceUrl")
@@ -101,4 +110,6 @@ data class Feeding(val date: String,
                    val notes: String)
 
 data class FeedingAggregate(val date: String,
-                            val milkVolumeMilliliters: Int)
+                            val milkVolumeMilliliters: Int,
+                            val diaperCount: Int,
+                            val nursingDurationMinutes: Int)
