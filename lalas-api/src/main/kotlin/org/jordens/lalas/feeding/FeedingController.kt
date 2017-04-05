@@ -38,7 +38,7 @@ class FeedingController @Autowired constructor(val configuration: FeedingConfigu
 
   val feedings: AtomicReference<List<Feeding>> = AtomicReference(emptyList())
 
-  @GetMapping("/")
+  @GetMapping("/byHour")
   fun all(): List<Feeding> = feedings.get()
 
   @GetMapping("/byDay")
@@ -55,7 +55,9 @@ class FeedingController @Autowired constructor(val configuration: FeedingConfigu
     val feedings = feedingsByDay.map { f ->
       FeedingAggregate(
         f.key,
+        f.value.size,
         f.value.sumBy { it.milkVolumeMilliliters },
+        f.value.sumBy { it.milkVolumeMilliliters } / f.value.size,
         f.value.sumBy { it.diaperTypes.size },
         f.value.sumBy { it.nursingDurationMinutes }
       )
@@ -63,7 +65,9 @@ class FeedingController @Autowired constructor(val configuration: FeedingConfigu
 
     // figure out how to make a generic comparator based off of `sort`
     when (sort) {
-      "milkVolumeMilliliters" -> return feedings.sortedByDescending { it.milkVolumeMilliliters }
+      "numberOfFeedings" -> return feedings.sortedByDescending { it.numberOfFeedings }
+      "milkVolumeTotalMilliliters" -> return feedings.sortedByDescending { it.milkVolumeTotalMilliliters }
+      "milkVolumeAverageMilliliters" -> return feedings.sortedByDescending { it.milkVolumeAverageMilliliters }
       "diaperCount" -> return feedings.sortedByDescending { it.diaperCount }
       "nursingDurationMinutes" -> return feedings.sortedByDescending { it.nursingDurationMinutes }
       else -> return feedings.sortedByDescending { it.date }
@@ -110,6 +114,8 @@ data class Feeding(val date: String,
                    val notes: String)
 
 data class FeedingAggregate(val date: String,
-                            val milkVolumeMilliliters: Int,
+                            val numberOfFeedings: Int,
+                            val milkVolumeTotalMilliliters: Int,
+                            val milkVolumeAverageMilliliters: Int,
                             val diaperCount: Int,
                             val nursingDurationMinutes: Int)
