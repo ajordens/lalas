@@ -21,7 +21,8 @@ import java.net.URL
 
 @ConfigurationProperties(prefix = "feedings")
 class LalasConfigurationProperties {
-  var source:String = ""
+  var source: String = ""
+  var name: String = ""
 
   fun sourceAsUrl() = URL(source)
 }
