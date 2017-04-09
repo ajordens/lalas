@@ -1,0 +1,33 @@
+.table-fixed {
+  width: 100%;
+  tbody {
+    height: 400px;
+    overflow-y: auto;
+    width: 100%;
+  }
+  thead, tbody, tr, td, th {
+    display: block;
+  }
+  tbody {
+    td {
+      float: left;
+    }
+  }
+  thead {
+    tr {
+      th {
+        float: left;
+        background-color: rgba(148,159,177,1);
+        border-color: rgba(148,159,177,0.2);
+      }
+    }
+  }
+
+  ::-webkit-scrollbar {
+    width: 0; /* remove scrollbar space */
+    background: transparent; /* optional: just make scrollbar invisible */
+  }
+}
+
+
+

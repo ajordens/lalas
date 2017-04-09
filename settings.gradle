@@ -1,1 +1,1 @@
-include 'lalas-api'
+include 'lalas-api', 'lalas-web'
