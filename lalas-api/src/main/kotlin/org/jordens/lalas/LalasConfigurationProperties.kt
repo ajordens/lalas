@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.jordens.lalas.feeding
+package org.jordens.lalas
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URL
 
 @ConfigurationProperties(prefix = "feedings")
-class FeedingConfigurationProperties {
+class LalasConfigurationProperties {
   var source:String = ""
 
   fun sourceAsUrl() = URL(source)

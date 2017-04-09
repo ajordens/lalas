@@ -16,16 +16,15 @@
 
 package org.jordens.lalas
 
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.bind.annotation.ExceptionHandler
+import javax.servlet.http.HttpServletResponse
 
-@SpringBootApplication
-@EnableScheduling
-@EnableConfigurationProperties(LalasConfigurationProperties::class)
-class Main
-
-fun main(args: Array<String>) {
-  SpringApplication.run(Main::class.java, *args)
+@ControllerAdvice
+public class IllegalArgumentExceptionHandler {
+  @ExceptionHandler(IllegalArgumentException::class)
+  fun handleIllegalArgumentException(ex: Throwable, response: HttpServletResponse) {
+    response.sendError(HttpStatus.BAD_REQUEST.value(), ex.message)
+  }
 }

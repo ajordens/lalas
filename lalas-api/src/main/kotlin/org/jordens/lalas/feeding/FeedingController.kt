@@ -16,48 +16,40 @@
 
 package org.jordens.lalas.feeding
 
+import org.jordens.lalas.Feeding
+import org.jordens.lalas.FeedingDataSource
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.apache.commons.csv.CSVRecord
-import org.apache.commons.csv.CSVFormat
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.RequestParam
-import java.io.StringReader
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.concurrent.atomic.AtomicReference
 
 @RestController
 @RequestMapping(value = "/api/feedings")
-class FeedingController @Autowired constructor(val configuration: FeedingConfigurationProperties) {
+class FeedingController @Autowired constructor(val feedingDataSource: FeedingDataSource) {
   val logger = LoggerFactory.getLogger(FeedingController::class.java)
-  val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-  val feedings: AtomicReference<List<Feeding>> = AtomicReference(emptyList())
+  @GetMapping("/")
+  fun all(): List<Feeding> = feedingDataSource.feedings()
 
-  @GetMapping("/byHour")
-  fun all(): List<Feeding> = feedings.get()
+  @GetMapping("/byFeeding")
+  fun allByHour(@RequestParam(value="hour", required=false, defaultValue = "10:00") hour: String,
+                @RequestParam(value="feeding", required=true) feeding: Int): List<Feeding> {
+    require(feeding > 0) { "feeding must be > 0" }
+    return feedingDataSource.feedingsByDay(hour).map { it.value.get(feeding - 1) }.sortedByDescending { it.date }
+  }
 
   @GetMapping("/byDay")
-  fun allByDay(@RequestParam(value = "time", required = false) time: String?,
+  fun allByDay(@RequestParam(value = "hour", required = false, defaultValue = "10:00") hour: String,
                @RequestParam(value = "sort", required = false, defaultValue = "date") sort: String): List<FeedingAggregate> {
-    val feedingsByDay: MutableMap<String, MutableList<Feeding>> = feedings.get().groupByTo(mutableMapOf()) {
-      if (time != null && it.time < time) {
-        LocalDate.parse(it.date, formatter).minusDays(1).format(formatter)
-      } else {
-        it.date
-      }
-    }
-
+    val feedingsByDay = feedingDataSource.feedingsByDay(hour)
     val feedings = feedingsByDay.map { f ->
       FeedingAggregate(
         f.key,
         f.value.size,
         f.value.sumBy { it.milkVolumeMilliliters },
-        f.value.sumBy { it.milkVolumeMilliliters } / f.value.size,
+        Math.round(f.value.sumBy { it.milkVolumeMilliliters } / f.value.size.toFloat()),
         f.value.sumBy { it.diaperTypes.size },
         f.value.sumBy { it.nursingDurationMinutes }
       )
@@ -73,45 +65,7 @@ class FeedingController @Autowired constructor(val configuration: FeedingConfigu
       else -> return feedings.sortedByDescending { it.date }
     }
   }
-
-  @Scheduled(fixedRate = 300000)
-  fun fetchFeedings() {
-    val sourceUrl = configuration.sourceAsUrl()
-    logger.info("Fetching feedings from $sourceUrl")
-
-    val column = { record: CSVRecord, columnName: String ->
-      val value = record.get(columnName)
-      if (value.isNullOrEmpty()) null else value
-    }
-
-    val records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(StringReader(sourceUrl.readText()))
-    feedings.set(
-      records.map { record ->
-        Feeding(
-          column(record, "date") ?: "n/a",
-          column(record, "time") ?: "n/a",
-          (column(record, "nursing_duration_minutes") ?: "0").toInt(),
-          column(record, "milk_type") ?: "n/a",
-          (column(record, "milk_volume_ml") ?: "0").toInt(),
-          column(record, "body_temperature")?.toDouble(),
-          (column(record, "diaper_type") ?: "").split(","),
-          column(record, "notes") ?: "n/a"
-        )
-      }
-    )
-
-    logger.info("Fetched ${feedings.get().size} feedings from $sourceUrl")
-  }
 }
-
-data class Feeding(val date: String,
-                   val time: String,
-                   val nursingDurationMinutes: Int,
-                   val milkType: String,
-                   val milkVolumeMilliliters: Int,
-                   val bodyTemperature: Double?,
-                   val diaperTypes: Collection<String>,
-                   val notes: String)
 
 data class FeedingAggregate(val date: String,
                             val numberOfFeedings: Int,
