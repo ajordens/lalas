@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam
 class FeedingController @Autowired constructor(val feedingDataSource: FeedingDataSource) {
   val logger = LoggerFactory.getLogger(FeedingController::class.java)
 
-  @GetMapping("/")
+  @GetMapping
   fun all(): List<Feeding> = feedingDataSource.feedings()
 
   @GetMapping("/byFeeding")

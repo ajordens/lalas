@@ -17,3 +17,9 @@ node {
   // Enabled the automatic download. False is the default (for now).
   download = true
 }
+
+task build(type: NpmTask) {
+  args = ['run', 'build']
+}
+
+build.dependsOn(npm_install)
