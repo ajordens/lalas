@@ -15,8 +15,6 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {FeedingAggregate} from "./feeding-aggregate";
-import {Router} from "@angular/router";
 import {FeedingService} from "./feeding.service";
 
 import * as _ from "lodash";
@@ -33,20 +31,28 @@ export class FeedingsByFeedingComponent implements OnInit {
   chartOptions: Object;
   showChart: boolean = false;
 
-  constructor(private router: Router,
-              private feedingService: FeedingService) {
+  constructor(private feedingService: FeedingService) {
   }
 
   ngOnInit(): void {
     this.feedingService.getFeedingsByFeeding()
       .then(feedings => {
         this.feedings = feedings;
-        console.log(feedings);
         this.refresh(feedings);
       });
   }
 
   private refresh(feedings): void {
+    let series = [];
+
+    feedings.forEach(function (feeding, i) {
+      series.push({
+        data: _.map(feeding.feedings, 'milkVolumeMilliliters'),
+        name: 'Feeding #' + (i + 1),
+        visible: feeding.current
+      });
+    });
+
     this.chartOptions = {
       chart: {
         type: 'line'
@@ -62,16 +68,7 @@ export class FeedingsByFeedingComponent implements OnInit {
           text: 'Volume (ml)'
         }
       },
-      series: [
-        {data: _.map(feedings[0].feedings, 'milkVolumeMilliliters'), name: 'Feeding #1'},
-        {data: _.map(feedings[1].feedings, 'milkVolumeMilliliters'), name: 'Feeding #2'},
-        {data: _.map(feedings[2].feedings, 'milkVolumeMilliliters'), name: 'Feeding #3'},
-        {data: _.map(feedings[3].feedings, 'milkVolumeMilliliters'), name: 'Feeding #4'},
-        {data: _.map(feedings[4].feedings, 'milkVolumeMilliliters'), name: 'Feeding #5'},
-        {data: _.map(feedings[5].feedings, 'milkVolumeMilliliters'), name: 'Feeding #6'},
-        {data: _.map(feedings[6].feedings, 'milkVolumeMilliliters'), name: 'Feeding #7'},
-        {data: _.map(feedings[7].feedings, 'milkVolumeMilliliters'), name: 'Feeding #8'},
-      ]
+      series: series
     };
 
     this.showChart = true;

@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RestController
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestParam
+import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * Feeding information grouped by day (`/byDay`) or by time (`/byFeeding`).
@@ -38,6 +40,7 @@ import java.util.*
 @RequestMapping(value = "/api/feedings")
 class FeedingController @Autowired constructor(val feedingDataSource: FeedingDataSource) {
   val logger = LoggerFactory.getLogger(FeedingController::class.java)
+  val dateFormatter = SimpleDateFormat("HH:mm")
 
   @GetMapping
   fun all(): List<Feeding> = feedingDataSource.feedings()
@@ -60,6 +63,18 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
         lastSevenDays.map { it.time }.toSortedSet()
       )
     }
+
+    // greater than first time (between 10:30 and 24:00) then go until you find one that you're less then
+    // less than first time
+
+    val currentIndex = determineCurrentIndex(
+      feedingAggregates
+        .filter { !it.feedings.isEmpty() }
+        .map { it.summaries["sevenDay"]?.timesOfDay?.first() },
+      dateFormatter.format(Date())
+    )
+
+    feedingAggregates[currentIndex].current = true
 
     if (feeding != null) {
       return feedingAggregates.filter { it.feeding == feeding }
@@ -93,6 +108,23 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
       else -> return feedings.sortedByDescending { it.date }
     }
   }
+
+  private fun determineCurrentIndex(feedingTimes: List<String?>, currentTime: String): Int {
+    fun makeRelativeDate(time : String?) : Date {
+      val t = dateFormatter.parse(time).time
+      return when (t < dateFormatter.parse(feedingTimes[0]).time) {
+        true -> Date(t + TimeUnit.DAYS.toMillis(1))
+        false -> Date(t)
+      }
+    }
+
+    val feedingDates = feedingTimes.map(::makeRelativeDate)
+    val currentDate = makeRelativeDate(currentTime)
+
+    return feedingTimes.indexOf(
+      dateFormatter.format(feedingDates.sortedByDescending { it.compareTo(currentDate) }.first())
+    )
+  }
 }
 
 data class DailyFeedingAggregate(val date: String,
@@ -104,7 +136,9 @@ data class DailyFeedingAggregate(val date: String,
 
 data class FeedingAggregate(val feeding: Int,
                             val feedings: MutableList<Feeding>,
-                            val summaries: MutableMap<String, Summary>)
+                            val summaries: MutableMap<String, Summary>,
+                            var current: Boolean = false)
 
 
-data class Summary(val milkVolumeAverageMilliliters: Int, val timesOfDay: Collection<String>)
+data class Summary(val milkVolumeAverageMilliliters: Int,
+                   val timesOfDay: Collection<String>)
