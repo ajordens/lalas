@@ -110,7 +110,7 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
   }
 
   private fun determineCurrentIndex(feedingTimes: List<String?>, currentTime: String): Int {
-    fun makeRelativeDate(time : String?) : Date {
+    fun makeRelativeDate(time: String?): Date {
       val t = dateFormatter.parse(time).time
       return when (t < dateFormatter.parse(feedingTimes[0]).time) {
         true -> Date(t + TimeUnit.DAYS.toMillis(1))
@@ -122,7 +122,12 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
     val currentDate = makeRelativeDate(currentTime)
 
     return feedingTimes.indexOf(
-      dateFormatter.format(feedingDates.sortedByDescending { it.compareTo(currentDate) }.first())
+      dateFormatter.format(
+        // find the *closest* feeding time relative to current time (may be in past or future)
+        feedingDates
+          .associateBy({ it }, { Math.abs(it.time - currentDate.time) }).entries
+          .sortedBy { it.value }.get(0).key
+      )
     )
   }
 }
