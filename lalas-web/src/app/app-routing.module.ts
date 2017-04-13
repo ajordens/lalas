@@ -7,11 +7,11 @@ import {FeedingAggregateComponent} from "./feeding/feeding-aggregate.component";
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/dashboard',
+    redirectTo: '/dashboard/byDay',
     pathMatch: 'full'
   },
   {
-    path: 'dashboard',
+    path: 'dashboard/:type',
     component: DashboardComponent
   },
   {

@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
-
-import {FeedingService} from "../feeding/feeding.service";
-import {FeedingAggregate} from "../feeding/feeding-aggregate";
-
-import {ChartsModule, Color} from 'ng2-charts';
-
-import * as _ from "lodash";
+import {Component} from "@angular/core";
+import {Location} from "@angular/common";
+import {ActivatedRoute, NavigationEnd, Params, Router} from "@angular/router";
 
 @Component({
   moduleId: module.id,
@@ -30,77 +24,20 @@ import * as _ from "lodash";
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
-  days: FeedingAggregate[] = [];
-  sortField: string = 'date';
-  sortDirection: string = 'desc';
+export class DashboardComponent {
+  currentType: string;
 
-  // lineChart
-  public lineChartData: Array<any> = [];
-  public lineChartLabels: Array<any> = [];
-  public lineChartOptions: any = {
-    responsive: false
-  };
-  public lineChartColors: Array<any> = [
-    {
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }
-  ];
-  public lineChartLegend: boolean = true;
-  public lineChartType: string = 'line';
-  public showChart: boolean = false;
-
-  constructor(private router: Router,
-              private feedingService: FeedingService) {
-  }
-
-  ngOnInit(): void {
-    this.feedingService.getFeedingsByDay()
-      .then(feedings => {
-        this.days = feedings;
-        this.refresh(feedings);
-      });
-  }
-
-  sort(field): void {
-    let direction;
-
-    if (field === this.sortField) {
-      direction = (this.sortDirection == 'desc') ? 'asc' : 'desc';
-    } else {
-      direction = 'desc';
-    }
-
-    this.feedingService.getFeedingsByDay()
-      .then(feedings => {
-        this.days = _.orderBy(feedings, [field], [direction]);
-        this.sortField = field;
-        this.sortDirection = direction;
-
-        this.refresh(feedings);
-      });
-  }
-
-  gotoFeedingAggregate(feedingAggregate: FeedingAggregate): void {
-    let link = ['/days/', feedingAggregate.date];
-    this.router.navigate(link);
-  }
-
-  private refresh(feedings): void {
-    feedings = _.orderBy(feedings, ['date'], ['asc']);
-
-    this.lineChartLabels = _.map(feedings, 'date');
-    this.lineChartData = [
-      {data: _.map(feedings, 'milkVolumeAverageMilliliters'), label: 'Average Volume (ml)'},
-    ];
-    this.showChart = true;
-
-    console.log(this.lineChartData);
-    console.log(this.lineChartLabels);
+  constructor(private location: Location,
+              private router: Router,
+              private route: ActivatedRoute) {
+    router.events.subscribe((val) => {
+      if (val instanceof NavigationEnd) {
+        this.route.params.forEach((params: Params) => {
+          if (params['type'] !== undefined) {
+            this.currentType = params['type'];
+          }
+        });
+      }
+    });
   }
 }

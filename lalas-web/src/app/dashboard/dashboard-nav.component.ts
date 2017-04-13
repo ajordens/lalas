@@ -15,6 +15,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
+import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 import {UserService} from "../user/user.service";
 
@@ -26,9 +27,16 @@ import {UserService} from "../user/user.service";
 })
 export class DashboardNavComponent implements OnInit {
   user = '';
+  currentRoute: string;
 
-  constructor(private router: Router,
+  constructor(private location: Location,
+              private router: Router,
               private userService: UserService) {
+    router.events.subscribe((val) => {
+      if (location.path() != '') {
+        this.currentRoute = location.path();
+      }
+    });
   }
 
   ngOnInit(): void {

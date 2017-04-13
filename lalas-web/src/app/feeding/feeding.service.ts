@@ -36,6 +36,14 @@ export class FeedingService {
       .catch(this.handleError);
   }
 
+  getFeedingsByFeeding(): Promise<Array<FeedingAggregate>> {
+    return this.http
+      .get(this.feedingsUrl + '/byFeeding')
+      .toPromise()
+      .then(res => res.json())
+      .catch(this.handleError);
+  }
+
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
     return Promise.reject(error.message || error);
