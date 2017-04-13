@@ -24,7 +24,16 @@ import org.springframework.web.bind.annotation.RestController
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestParam
+import java.util.*
 
+/**
+ * Feeding information grouped by day (`/byDay`) or by time (`/byFeeding`).
+ *
+ * Helps answer questions like:
+ * - how much milk is consumed in an entire day (day over day)
+ * - how much milk is consumed in a particular feeding (day over day)
+ * - overall milk consumption vs time spent nursing
+ */
 @RestController
 @RequestMapping(value = "/api/feedings")
 class FeedingController @Autowired constructor(val feedingDataSource: FeedingDataSource) {
@@ -34,18 +43,37 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
   fun all(): List<Feeding> = feedingDataSource.feedings()
 
   @GetMapping("/byFeeding")
-  fun allByHour(@RequestParam(value="hour", required=false, defaultValue = "10:00") hour: String,
-                @RequestParam(value="feeding", required=true) feeding: Int): List<Feeding> {
-    require(feeding > 0) { "feeding must be > 0" }
-    return feedingDataSource.feedingsByDay(hour).map { it.value.get(feeding - 1) }.sortedByDescending { it.date }
+  fun allByFeeding(@RequestParam(value = "hour", required = false, defaultValue = "10:00") hour: String,
+                   @RequestParam(value = "feeding", required = false) feeding: Int?): List<FeedingAggregate> {
+    require(feeding == null || feeding > 0) { "feeding must be > 0" }
+
+    val feedingAggregates = (1..10).map { FeedingAggregate(it, ArrayList(), HashMap()) }
+
+    feedingDataSource.feedingsByDay(hour).forEach {
+      it.value.forEachIndexed { i, feeding -> feedingAggregates[i].feedings.add(feeding) }
+    }
+
+    feedingAggregates.forEach {
+      val lastSevenDays = it.feedings.reversed().subList(0, Math.min(it.feedings.size, 7))
+      it.summaries["sevenDay"] = Summary(
+        Math.round(lastSevenDays.map { it.milkVolumeMilliliters }.average()).toInt(),
+        lastSevenDays.map { it.time }.toSortedSet()
+      )
+    }
+
+    if (feeding != null) {
+      return feedingAggregates.filter { it.feeding == feeding }
+    }
+
+    return feedingAggregates.filter { !it.feedings.isEmpty() && it.feedings.size > 2 }
   }
 
   @GetMapping("/byDay")
   fun allByDay(@RequestParam(value = "hour", required = false, defaultValue = "10:00") hour: String,
-               @RequestParam(value = "sort", required = false, defaultValue = "date") sort: String): List<FeedingAggregate> {
+               @RequestParam(value = "sort", required = false, defaultValue = "date") sort: String): List<DailyFeedingAggregate> {
     val feedingsByDay = feedingDataSource.feedingsByDay(hour)
     val feedings = feedingsByDay.map { f ->
-      FeedingAggregate(
+      DailyFeedingAggregate(
         f.key,
         f.value.size,
         f.value.sumBy { it.milkVolumeMilliliters },
@@ -67,9 +95,16 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
   }
 }
 
-data class FeedingAggregate(val date: String,
-                            val numberOfFeedings: Int,
-                            val milkVolumeTotalMilliliters: Int,
-                            val milkVolumeAverageMilliliters: Int,
-                            val diaperCount: Int,
-                            val nursingDurationMinutes: Int)
+data class DailyFeedingAggregate(val date: String,
+                                 val numberOfFeedings: Int,
+                                 val milkVolumeTotalMilliliters: Int,
+                                 val milkVolumeAverageMilliliters: Int,
+                                 val diaperCount: Int,
+                                 val nursingDurationMinutes: Int)
+
+data class FeedingAggregate(val feeding: Int,
+                            val feedings: MutableList<Feeding>,
+                            val summaries: MutableMap<String, Summary>)
+
+
+data class Summary(val milkVolumeAverageMilliliters: Int, val timesOfDay: Collection<String>)
