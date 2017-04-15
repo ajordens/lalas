@@ -1,36 +1,24 @@
 buildscript {
-  ext {
-    kotlinVersion = '1.0.6'
-    springBootVersion = '1.5.2.RELEASE'
-  }
   repositories {
-    mavenCentral()
+    jcenter()
   }
   dependencies {
     classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
     classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+    classpath('com.netflix.nebula:gradle-ospackage-plugin:4.4.0')
   }
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: 'org.springframework.boot'
-
-jar {
-  baseName = 'lalas'
-  version = '0.0.1-SNAPSHOT'
-
-  from('../lalas-web/dist') {
-    //Public is a default supported Spring Boot resources directory.
-    into 'public'
-  }
-}
-
-sourceCompatibility = 1.8
+apply plugin: 'nebula.ospackage'
+apply plugin: 'application'
 
 repositories {
   mavenCentral()
+  jcenter()
 }
 
 dependencies {
@@ -48,3 +36,32 @@ dependencies {
 }
 
 processResources.dependsOn(':lalas-web:build')
+
+tasks.build.finalizedBy tasks.buildDeb
+tasks.buildDeb.dependsOn { installDist }
+
+mainClassName = "org.jordens.sleepybaby.MainKt"
+applicationName = "sleepybaby"
+
+jar {
+  baseName = 'sleepybaby'
+  version = '0.0.1-SNAPSHOT'
+
+  from('../lalas-web/dist') {
+    into 'public' // public is a default supported Spring Boot resources directory.
+  }
+}
+
+ospackage {
+  from "build/install/sleepybaby"
+  into "/apps/sleepybaby"
+
+  from "root"
+  into "/"
+}
+
+bootRepackage.enabled = false
+
+springBoot {
+  mainClass = "org.jordens.sleepybaby.MainKt"
+}

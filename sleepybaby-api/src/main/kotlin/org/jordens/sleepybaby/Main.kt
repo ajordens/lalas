@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.jordens.lalas
+package org.jordens.sleepybaby
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -23,7 +23,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
 @EnableScheduling
-@EnableConfigurationProperties(LalasConfigurationProperties::class)
+@EnableConfigurationProperties(SleepyBabyConfigurationProperties::class)
 class Main
 
 fun main(args: Array<String>) {

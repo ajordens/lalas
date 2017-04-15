@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.jordens.lalas.user
+package org.jordens.sleepybaby.user
 
-import org.jordens.lalas.LalasConfigurationProperties
+import org.jordens.sleepybaby.SleepyBabyConfigurationProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController @Autowired constructor(val configurationProperties: LalasConfigurationProperties) {
+public class UserController @Autowired constructor(val configurationProperties: SleepyBabyConfigurationProperties) {
   @GetMapping("/me")
   fun me(): UserDetails = UserDetails(configurationProperties.name)
 }

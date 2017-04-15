@@ -1,4 +1,4 @@
-package org.jordens.lalas;
+package org.jordens.sleepybaby;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;

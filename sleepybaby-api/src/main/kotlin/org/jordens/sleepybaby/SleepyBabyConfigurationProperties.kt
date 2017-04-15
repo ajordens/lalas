@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package org.jordens.lalas
+package org.jordens.sleepybaby
 
-import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.ControllerAdvice
-import org.springframework.web.bind.annotation.ExceptionHandler
-import javax.servlet.http.HttpServletResponse
+import org.springframework.boot.context.properties.ConfigurationProperties
+import java.net.URL
 
-@ControllerAdvice
-public class IllegalArgumentExceptionHandler {
-  @ExceptionHandler(IllegalArgumentException::class)
-  fun handleIllegalArgumentException(ex: Throwable, response: HttpServletResponse) {
-    response.sendError(HttpStatus.BAD_REQUEST.value(), ex.message)
-  }
+@ConfigurationProperties(prefix = "feedings")
+class SleepyBabyConfigurationProperties {
+  var source: String = ""
+  var name: String = ""
+
+  fun sourceAsUrl() = URL(source)
 }

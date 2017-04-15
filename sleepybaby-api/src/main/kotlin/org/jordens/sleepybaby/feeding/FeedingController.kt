@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.jordens.lalas.feeding
+package org.jordens.sleepybaby.feeding
 
-import org.jordens.lalas.Feeding
-import org.jordens.lalas.FeedingDataSource
+import org.jordens.sleepybaby.Feeding
+import org.jordens.sleepybaby.FeedingDataSource
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -64,12 +64,9 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
       )
     }
 
-    // greater than first time (between 10:30 and 24:00) then go until you find one that you're less then
-    // less than first time
-
     val currentIndex = determineCurrentIndex(
       feedingAggregates
-        .filter { !it.feedings.isEmpty() }
+        .filter { !it.feedings.isEmpty() && it.feedings.size > 2}
         .map { it.summaries["sevenDay"]?.timesOfDay?.first() },
       dateFormatter.format(Date())
     )

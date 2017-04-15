@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package org.jordens.lalas
+package org.jordens.sleepybaby
 
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
-import org.jordens.lalas.LalasConfigurationProperties
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
@@ -29,7 +28,7 @@ import java.time.format.DateTimeFormatter
 import java.util.concurrent.atomic.AtomicReference
 
 @Component
-class FeedingDataSource @Autowired constructor(val configuration: LalasConfigurationProperties) {
+class FeedingDataSource @Autowired constructor(val configuration: SleepyBabyConfigurationProperties) {
   private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
   private val logger = LoggerFactory.getLogger(FeedingDataSource::class.java)
   private val feedings: AtomicReference<List<Feeding>> = AtomicReference(emptyList())
