@@ -1,1 +1,1 @@
-include 'sleepybaby-api', 'lalas-web'
+include 'sleepybaby-api', 'sleepybaby-web-ng2'

@@ -35,7 +35,7 @@ dependencies {
   testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
 }
 
-processResources.dependsOn(':lalas-web:build')
+processResources.dependsOn(':sleepybaby-web-ng2:build')
 
 tasks.build.finalizedBy tasks.buildDeb
 tasks.buildDeb.dependsOn { installDist }
@@ -47,7 +47,7 @@ jar {
   baseName = 'sleepybaby'
   version = '0.0.1-SNAPSHOT'
 
-  from('../lalas-web/dist') {
+  from('../sleepybaby-web-ng2/dist') {
     into 'public' // public is a default supported Spring Boot resources directory.
   }
 }
