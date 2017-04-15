@@ -1,0 +1,14 @@
+buildscript {
+  ext {
+    kotlinVersion = '1.0.6'
+    springBootVersion = '1.5.2.RELEASE'
+  }
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.netflix.nebula:nebula-release-plugin:4.2.0'
+  }
+}
+
+apply plugin: 'nebula.nebula-release'
