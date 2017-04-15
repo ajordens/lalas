@@ -1,0 +1,10 @@
+[Unit]
+Description=Job that runs the sleepybaby daemon
+Documentation=
+
+[Service]
+Type=simple
+ExecStart=/apps/sleepybaby/bin/sleepybaby
+
+[Install]
+WantedBy=
