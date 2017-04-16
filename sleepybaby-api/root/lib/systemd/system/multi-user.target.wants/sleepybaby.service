@@ -5,6 +5,7 @@ Documentation=
 [Service]
 Type=simple
 ExecStart=/apps/sleepybaby/bin/sleepybaby
+Restart=always
 
 [Install]
 WantedBy=

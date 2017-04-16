@@ -53,11 +53,13 @@ jar {
 }
 
 ospackage {
-  from "build/install/sleepybaby"
-  into "/apps/sleepybaby"
+  from("build/install/sleepybaby") {
+    into "/apps/sleepybaby"
+  }
 
-  from "root"
-  into "/"
+  from("root"){
+    into "/"
+  }
 }
 
 bootRepackage.enabled = false

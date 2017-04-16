@@ -1,0 +1,27 @@
+{
+  "builders": [
+    {
+      "type": "googlecompute",
+      "ssh_username": "sleepybaby",
+      "account_file": "/Users/ajordens/.config/gcloud/lalas_credentials.json",
+      "project_id": "lalas-164702",
+      "source_image_family": "ubuntu-1604-lts",
+      "zone": "us-central1-c",
+      "image_name": "sleepybaby-{{timestamp}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "destination": "/tmp",
+      "source": "./sleepybaby-api/build/distributions/",
+      "type": "file"
+    },
+    {
+      "inline": [
+        "sudo apt-get -y install openjdk-8-jre-headless",
+        "sudo dpkg -i /tmp/sleepybaby*.deb"
+      ],
+      "type": "shell"
+    }
+  ]
+}
