@@ -18,16 +18,18 @@ import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 import {UserService} from "../user/user.service";
+import {showWarningOnce} from "tslint/lib/error";
 
 @Component({
   moduleId: module.id,
-  selector: 'dashboard-nav',
-  templateUrl: './dashboard-nav.component.html',
-  styleUrls: ['./dashboard-nav.component.css']
+  selector: 'page-header',
+  templateUrl: './page-header.component.html',
+  styleUrls: ['./page-header.component.css']
 })
-export class DashboardNavComponent implements OnInit {
-  user = '';
+export class PageHeaderComponent implements OnInit {
+  user: string;
   currentRoute: string;
+  showNav = true;
 
   constructor(private location: Location,
               private router: Router,
@@ -36,13 +38,20 @@ export class DashboardNavComponent implements OnInit {
       if (location.path() != '') {
         this.currentRoute = location.path();
       }
+
+      this.showNav = location.path() !== '/login';
+      if (this.showNav && !this.user) {
+        this.ngOnInit();
+      }
     });
   }
 
   ngOnInit(): void {
     this.userService.getCurrent()
       .then(user => {
-        this.user = user.name
+        if (user) {
+          this.user = user.name;
+        }
       });
   }
 }

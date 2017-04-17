@@ -20,12 +20,13 @@ import {Headers, Http, Response} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import {FeedingAggregate} from './feeding-aggregate';
+import {ExceptionHandlerService} from "../exceptions/exception-handler.service";
 
 @Injectable()
 export class FeedingService {
-  private feedingsUrl = '/api/feedings/';  // URL to web api
+  private feedingsUrl = '/api/feedings/';
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private exception: ExceptionHandlerService) {
   }
 
   getFeedingsByDay(): Promise<Array<FeedingAggregate>> {
@@ -33,7 +34,7 @@ export class FeedingService {
       .get(this.feedingsUrl + '/byDay')
       .toPromise()
       .then(res => res.json())
-      .catch(this.handleError);
+      .catch(this.handleError.bind(this));
   }
 
   getFeedingsByFeeding(): Promise<Array<FeedingAggregate>> {
@@ -41,11 +42,10 @@ export class FeedingService {
       .get(this.feedingsUrl + '/byFeeding')
       .toPromise()
       .then(res => res.json())
-      .catch(this.handleError);
+      .catch(this.handleError.bind(this));
   }
 
   private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    return this.exception.handleTransportError(error);
   }
 }

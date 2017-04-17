@@ -5,7 +5,7 @@ import {UserService} from "./user/user.service";
   moduleId: module.id,
   selector: 'my-app',
   template: `
-<dashboard-nav></dashboard-nav>
+<page-header></page-header>
 <div class="main">
   <div class="container">
     <!--<nav>-->
@@ -15,6 +15,7 @@ import {UserService} from "./user/user.service";
     <router-outlet></router-outlet>
   </div>
 </div>
+<page-footer></page-footer>
   `,
   styleUrls: ['./app.component.css']
 })

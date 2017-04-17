@@ -8,11 +8,14 @@ import {AppRoutingModule, routedComponents} from './app-routing.module';
 import {UserService} from "./user/user.service";
 import {FeedingService} from "./feeding/feeding.service";
 import {FeedingAggregateComponent} from "./feeding/feeding-aggregate.component";
-import {DashboardNavComponent} from "./dashboard/dashboard-nav.component";
 import {FeedingsByDayComponent} from "./feeding/feedings-byDay.component";
 import {FeedingsByFeedingComponent} from "./feeding/feedings-byFeeding.component";
 
 import { Ng2HighchartsModule } from 'ng2-highcharts';
+import {LoginComponent} from "./user/login.component";
+import {ExceptionHandlerService} from "./exceptions/exception-handler.service";
+import {PageFooterComponent} from "./layout/page-footer.component";
+import {PageHeaderComponent} from "./layout/page-header.component";
 
 @NgModule({
   imports: [
@@ -27,12 +30,15 @@ import { Ng2HighchartsModule } from 'ng2-highcharts';
     FeedingAggregateComponent,
     FeedingsByDayComponent,
     FeedingsByFeedingComponent,
-    DashboardNavComponent,
+    LoginComponent,
+    PageFooterComponent,
+    PageHeaderComponent,
     routedComponents
   ],
   providers: [
     UserService,
-    FeedingService
+    FeedingService,
+    ExceptionHandlerService
   ],
   bootstrap: [AppComponent]
 })

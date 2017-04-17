@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import {FeedingAggregateComponent} from "./feeding/feeding-aggregate.component";
+import {LoginComponent} from "./user/login.component";
 
 const routes: Routes = [
   {
@@ -18,6 +19,10 @@ const routes: Routes = [
     path: 'days/:id',
     component: FeedingAggregateComponent
   },
+  {
+    path: 'login',
+    component: LoginComponent
+  }
   // {
   //   path: 'heroes',
   //   component: HeroesComponent

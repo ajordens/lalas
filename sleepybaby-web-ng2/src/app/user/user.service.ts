@@ -20,50 +20,24 @@ import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { User } from './user';
+import {ExceptionHandlerService} from "../exceptions/exception-handler.service";
 
 @Injectable()
 export class UserService {
   private usersUrl = '/api/users/';  // URL to web api
 
-  constructor(private http: Http) { }
+  constructor(private http: Http,
+              private exception: ExceptionHandlerService) { }
 
   getCurrent(): Promise<User> {
     return this.http
       .get(this.usersUrl + '/me')
       .toPromise()
       .then(res => res.json())
-      .catch(this.handleError);
+      .catch(this.handleError.bind(this));
   }
 
-  // // Add new Hero
-  // private post(hero: Hero): Promise<Hero> {
-  //   let headers = new Headers({
-  //     'Content-Type': 'application/json'
-  //   });
-  //
-  //   return this.http
-  //     .post(this.heroesUrl, JSON.stringify(hero), { headers: headers })
-  //     .toPromise()
-  //     .then(res => res.json().data)
-  //     .catch(this.handleError);
-  // }
-
-  // Update existing Hero
-  // private put(hero: Hero): Promise<Hero> {
-  //   let headers = new Headers();
-  //   headers.append('Content-Type', 'application/json');
-  //
-  //   let url = `${this.heroesUrl}/${hero.id}`;
-  //
-  //   return this.http
-  //     .put(url, JSON.stringify(hero), { headers: headers })
-  //     .toPromise()
-  //     .then(() => hero)
-  //     .catch(this.handleError);
-  // }
-
   private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error.message || error);
+    return this.exception.handleTransportError(error);
   }
 }

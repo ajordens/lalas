@@ -38,7 +38,10 @@ export class FeedingsByFeedingComponent implements OnInit {
     this.feedingService.getFeedingsByFeeding()
       .then(feedings => {
         this.feedings = feedings;
-        this.refresh(feedings);
+
+        if (feedings && feedings.length > 0) {
+          this.refresh(feedings);
+        }
       });
   }
 
