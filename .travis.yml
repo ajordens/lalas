@@ -1,0 +1,19 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+sudo: required
+dist: trusty
+
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle
+  - sleepybaby-web-ng2/node_modules
+
+services:
+  - docker
+
+script: gradle/buildViaTravis.sh
+before_cache: gradle/prepCaches.sh
