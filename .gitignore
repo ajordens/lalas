@@ -5,3 +5,4 @@ build
 classes
 .gradle
 application.properties
+sleepybaby-web-ng2/dist/
