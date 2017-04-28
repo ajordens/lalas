@@ -26,6 +26,7 @@ import {ActivatedRoute, NavigationEnd, Params, Router} from "@angular/router";
 })
 export class DashboardComponent {
   currentType: string;
+  currentGrouping: string;
 
   constructor(private location: Location,
               private router: Router,
@@ -35,6 +36,9 @@ export class DashboardComponent {
         this.route.params.forEach((params: Params) => {
           if (params['type'] !== undefined) {
             this.currentType = params['type'];
+          }
+          if (params['grouping'] !== undefined) {
+            this.currentGrouping = params['grouping'];
           }
         });
       }

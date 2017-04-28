@@ -8,11 +8,11 @@ import {LoginComponent} from "./user/login.component";
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/dashboard/byDay',
+    redirectTo: '/dashboard/feedings/byDay',
     pathMatch: 'full'
   },
   {
-    path: 'dashboard/:type',
+    path: 'dashboard/:type/:grouping',
     component: DashboardComponent
   },
   {

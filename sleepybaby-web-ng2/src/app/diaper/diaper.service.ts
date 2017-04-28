@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {Headers, Http, Response} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { User } from './user';
+import {DiaperAggregate} from './diaper-aggregate';
 import {ExceptionHandlerService} from "../exceptions/exception-handler.service";
 
 @Injectable()
-export class UserService {
-  private usersUrl = '/api/users/';  // URL to web api
+export class DiaperService {
+  private diapersUrl = '/api/diapers/';
 
-  constructor(private http: Http,
-              private exceptionHandler: ExceptionHandlerService) { }
+  constructor(private http: Http, private exception: ExceptionHandlerService) {
+  }
 
-  getCurrent(): Promise<User> {
+  getDiapersByDay(): Promise<Array<DiaperAggregate>> {
     return this.http
-      .get(this.usersUrl + '/me')
+      .get(this.diapersUrl + '/byDay')
       .toPromise()
       .then(res => res.json())
       .catch(this.handleError.bind(this));
   }
 
   private handleError(error: any): Promise<any> {
-    return this.exceptionHandler.handleTransportError(error);
+    return this.exception.handleTransportError(error);
   }
 }

@@ -24,11 +24,14 @@
     <a class="navbar-brand" href="#">{{ user }}</a>
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item" [ngClass]="{active: currentRoute == '/dashboard/byDay'}">
-          <a class="nav-link" [routerLink]="['/dashboard/byDay']">By Day</a>
+        <li class="nav-item" [ngClass]="{active: currentRoute == '/dashboard/feedings/byDay'}">
+          <a class="nav-link" [routerLink]="['/dashboard/feedings/byDay']">Feedings By Day</a>
         </li>
-        <li class="nav-item" [ngClass]="{active: currentRoute == '/dashboard/byFeeding'}">
-          <a class="nav-link" [routerLink]="['/dashboard/byFeeding']">By Feeding</a>
+        <li class="nav-item" [ngClass]="{active: currentRoute == '/dashboard/feedings/byFeeding'}">
+          <a class="nav-link" [routerLink]="['/dashboard/feedings/byFeeding']">Feedings By Time</a>
+        </li>
+        <li class="nav-item" [ngClass]="{active: currentRoute == '/dashboard/diapers/byDay'}">
+          <a class="nav-link" [routerLink]="['/dashboard/diapers/byDay']">Diapers By Day</a>
         </li>
       </ul>
       <!--<form class="form-inline mt-2 mt-md-0">-->

@@ -71,7 +71,7 @@ class FeedingDataSource @Autowired constructor(val configuration: SleepyBabyConf
           (column(record, "diaper_type") ?: "").split(","),
           column(record, "notes") ?: "n/a"
         )
-      }
+      }.filter { it.date != "n/a" }
     )
 
     logger.info("Fetched ${feedings.get().size} feedings from $sourceUrl")

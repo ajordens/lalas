@@ -16,6 +16,8 @@ import {LoginComponent} from "./user/login.component";
 import {ExceptionHandlerService} from "./exceptions/exception-handler.service";
 import {PageFooterComponent} from "./layout/page-footer.component";
 import {PageHeaderComponent} from "./layout/page-header.component";
+import {DiapersByDayComponent} from "./diaper/diapers-byDay.component";
+import {DiaperService} from "./diaper/diaper.service";
 
 @NgModule({
   imports: [
@@ -30,6 +32,7 @@ import {PageHeaderComponent} from "./layout/page-header.component";
     FeedingAggregateComponent,
     FeedingsByDayComponent,
     FeedingsByFeedingComponent,
+    DiapersByDayComponent,
     LoginComponent,
     PageFooterComponent,
     PageHeaderComponent,
@@ -38,6 +41,7 @@ import {PageHeaderComponent} from "./layout/page-header.component";
   providers: [
     UserService,
     FeedingService,
+    DiaperService,
     ExceptionHandlerService
   ],
   bootstrap: [AppComponent]

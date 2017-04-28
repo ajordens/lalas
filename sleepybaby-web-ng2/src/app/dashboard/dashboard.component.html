@@ -1,2 +1,3 @@
-<feedings-byDay *ngIf="currentType == 'byDay'"></feedings-byDay>
-<feedings-byFeeding *ngIf="currentType == 'byFeeding'"></feedings-byFeeding>
+<feedings-byDay *ngIf="currentType == 'feedings' && currentGrouping == 'byDay'"></feedings-byDay>
+<feedings-byFeeding *ngIf="currentType == 'feedings' && currentGrouping == 'byFeeding'"></feedings-byFeeding>
+<diapers-byDay *ngIf="currentType == 'diapers' && currentGrouping == 'byDay'"></diapers-byDay>
