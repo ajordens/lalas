@@ -23,17 +23,34 @@
     </button>
     <a class="navbar-brand" href="#">{{ user }}</a>
     <div class="collapse navbar-collapse" id="navbarCollapse">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item" [ngClass]="{active: currentRoute == '/dashboard/feedings/byDay'}">
-          <a class="nav-link" [routerLink]="['/dashboard/feedings/byDay']">Feedings By Day</a>
-        </li>
-        <li class="nav-item" [ngClass]="{active: currentRoute == '/dashboard/feedings/byFeeding'}">
-          <a class="nav-link" [routerLink]="['/dashboard/feedings/byFeeding']">Feedings By Time</a>
-        </li>
-        <li class="nav-item" [ngClass]="{active: currentRoute == '/dashboard/diapers/byDay'}">
-          <a class="nav-link" [routerLink]="['/dashboard/diapers/byDay']">Diapers By Day</a>
-        </li>
-      </ul>
+      <div>
+        <div class="btn-group">
+          <button type="button"
+                  [ngClass]="currentRoute.startsWith('/dashboard/feedings') ? 'btn-primary' : 'btn-secondary'"
+                  class="btn dropdown-toggle"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false">Feedings
+          </button>
+          <div class="dropdown-menu">
+            <a class="nav-link" [routerLink]="['/dashboard/feedings/byDay']">By Day</a>
+            <a class="nav-link" [routerLink]="['/dashboard/feedings/byFeeding']">By Time</a>
+          </div>
+        </div><!-- /btn-group -->
+        <div class="btn-group">
+          <button type="button"
+                  [ngClass]="currentRoute.startsWith('/dashboard/diapers') ? 'btn-primary' : 'btn-secondary'"
+                  class="btn dropdown-toggle"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false">Diapers
+          </button>
+          <div class="dropdown-menu">
+            <a class="nav-link" [routerLink]="['/dashboard/diapers/byDay']">By Day</a>
+          </div>
+        </div><!-- /btn-group -->
+      </div>
+
       <!--<form class="form-inline mt-2 mt-md-0">-->
       <!--<input class="form-control mr-sm-2" type="text" placeholder="Search">-->
       <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->

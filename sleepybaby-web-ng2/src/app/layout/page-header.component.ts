@@ -28,7 +28,7 @@ import {showWarningOnce} from "tslint/lib/error";
 })
 export class PageHeaderComponent implements OnInit {
   user: string;
-  currentRoute: string;
+  currentRoute: string = '/default';
   showNav = true;
 
   constructor(private location: Location,
