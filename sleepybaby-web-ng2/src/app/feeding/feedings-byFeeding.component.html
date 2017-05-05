@@ -1,4 +1,4 @@
-<!--
+  <!--
   ~ Copyright 2017 Adam Jordens
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,12 @@
     <tbody>
     <tr *ngFor="let feeding of feedings">
       <td class="col-xl-2">{{feeding.feeding}}</td>
-      <td class="col-xl-2">{{feeding.summaries.sevenDay.timesOfDay}}</td>
+      <td class="col-xl-2">
+        <span>{{feeding.summaries.sevenDay.timesOfDay[0]}}</span>
+        <span *ngIf="feeding.summaries.sevenDay.timesOfDay.length > 1">
+          to {{feeding.summaries.sevenDay.timesOfDay.slice(-1)[0]}}
+        </span>
+      </td>
       <td class="col-xl-8">{{feeding.summaries.sevenDay.milkVolumeAverageMilliliters}}</td>
     </tr>
     </tbody>
