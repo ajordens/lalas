@@ -66,7 +66,7 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
 
     val currentIndex = determineCurrentIndex(
       feedingAggregates
-        .filter { !it.feedings.isEmpty() && it.feedings.size > 2}
+        .filter { !it.feedings.isEmpty() && it.feedings.size > 2 }
         .map { it.summaries["sevenDay"]?.timesOfDay?.first() },
       dateFormatter.format(Date())
     )

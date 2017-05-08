@@ -30,8 +30,17 @@ export class DiaperService {
   }
 
   getDiapersByDay(): Promise<Array<DiaperAggregate>> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+
+    let currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      headers.append('Authorization', JSON.parse(currentUser).token)
+    }
+
     return this.http
-      .get(this.diapersUrl + '/byDay')
+      .get(this.diapersUrl + '/byDay', {'headers': headers})
       .toPromise()
       .then(res => res.json())
       .catch(this.handleError.bind(this));

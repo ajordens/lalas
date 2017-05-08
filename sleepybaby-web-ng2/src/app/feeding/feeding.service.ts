@@ -30,16 +30,34 @@ export class FeedingService {
   }
 
   getFeedingsByDay(): Promise<Array<FeedingAggregate>> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+
+    let currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      headers.append('Authorization', JSON.parse(currentUser).token)
+    }
+
     return this.http
-      .get(this.feedingsUrl + '/byDay')
+      .get(this.feedingsUrl + '/byDay', {'headers': headers})
       .toPromise()
       .then(res => res.json())
       .catch(this.handleError.bind(this));
   }
 
   getFeedingsByFeeding(): Promise<Array<FeedingAggregate>> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+
+    let currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      headers.append('Authorization', JSON.parse(currentUser).token)
+    }
+
     return this.http
-      .get(this.feedingsUrl + '/byFeeding')
+      .get(this.feedingsUrl + '/byFeeding', {'headers': headers})
       .toPromise()
       .then(res => res.json())
       .catch(this.handleError.bind(this));
