@@ -27,16 +27,18 @@ class TokenAuthenticationService {
     val token = request.getHeader(HEADER_STRING)
     if (token != null) {
       // parse the token.
-      val user = Jwts.parser()
+      val body = Jwts.parser()
         .setSigningKey(SECRET)
         .parseClaimsJws(token!!.replace(TOKEN_PREFIX, ""))
         .body
-        .subject
 
-      return if (user != null)
-        UsernamePasswordAuthenticationToken(user, null, emptyList())
-      else
+      val user = body.subject
+      val expiration = body.expiration
+
+      return if (user == null || (expiration != null && expiration.before(Date())))
         null
+      else
+        UsernamePasswordAuthenticationToken(user, null, emptyList())
     }
     return null
   }
