@@ -3,6 +3,7 @@ package org.jordens.sleepybaby.auth
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import org.jordens.sleepybaby.JWTConfigurationProperties
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
@@ -15,12 +16,14 @@ import javax.servlet.http.HttpServletResponse
 import java.util.Collections
 
 class JWTLoginFilter(url: String,
-                     authManager: AuthenticationManager) : AbstractAuthenticationProcessingFilter(AntPathRequestMatcher(url)) {
+                     authManager: AuthenticationManager,
+                     tokenAuthService: TokenAuthenticationService) : AbstractAuthenticationProcessingFilter(AntPathRequestMatcher(url)) {
   val objectMapper = ObjectMapper().registerKotlinModule()
-  val tokenAuthenticationService = TokenAuthenticationService()
+  val tokenAuthenticationService : TokenAuthenticationService
 
   init {
     authenticationManager = authManager
+    tokenAuthenticationService = tokenAuthService
   }
 
   override fun attemptAuthentication(req: HttpServletRequest,

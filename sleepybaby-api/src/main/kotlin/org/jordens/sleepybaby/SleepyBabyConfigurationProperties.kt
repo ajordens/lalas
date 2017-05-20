@@ -20,9 +20,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URL
 
 @ConfigurationProperties(prefix = "feedings")
-class SleepyBabyConfigurationProperties {
-  var source: String = ""
-  var name: String = ""
-
+data class FeedingsConfigurationProperties(var source: String = "", var name: String = "") {
   fun sourceAsUrl() = URL(source)
 }
+
+@ConfigurationProperties(prefix = "jwt")
+data class JWTConfigurationProperties(var secret: String = "", var expiration: Int = 0)

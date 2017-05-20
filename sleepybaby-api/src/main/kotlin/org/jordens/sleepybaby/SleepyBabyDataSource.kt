@@ -28,7 +28,7 @@ import java.time.format.DateTimeFormatter
 import java.util.concurrent.atomic.AtomicReference
 
 @Component
-class FeedingDataSource @Autowired constructor(val configuration: SleepyBabyConfigurationProperties) {
+class FeedingDataSource @Autowired constructor(val configuration: FeedingsConfigurationProperties) {
   private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
   private val logger = LoggerFactory.getLogger(FeedingDataSource::class.java)
   private val feedings: AtomicReference<List<Feeding>> = AtomicReference(emptyList())

@@ -9,9 +9,7 @@ import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 
-class JWTAuthenticationFilter : GenericFilterBean() {
-  val tokenAuthenticationService = TokenAuthenticationService()
-
+class JWTAuthenticationFilter(val tokenAuthenticationService: TokenAuthenticationService) : GenericFilterBean() {
   @Throws(IOException::class, ServletException::class)
   override fun doFilter(request: ServletRequest,
                         response: ServletResponse,

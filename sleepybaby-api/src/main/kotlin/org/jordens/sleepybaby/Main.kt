@@ -23,8 +23,11 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
 @EnableScheduling
-@EnableConfigurationProperties(SleepyBabyConfigurationProperties::class)
-class Main
+@EnableConfigurationProperties(
+  FeedingsConfigurationProperties::class,
+  JWTConfigurationProperties::class
+)
+open class Main
 
 fun main(args: Array<String>) {
   SpringApplication.run(Main::class.java, *args)
