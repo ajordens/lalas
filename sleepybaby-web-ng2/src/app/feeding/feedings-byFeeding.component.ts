@@ -56,6 +56,12 @@ export class FeedingsByFeedingComponent implements OnInit {
       });
     });
 
+    series.push({
+      data: _.map(feedings[0].feedings, 'milkVolumeTotalMilliliters'),
+      name: 'Overall',
+      yAxis: 1
+    });
+
     this.chartOptions = {
       chart: {
         type: 'line'
@@ -66,11 +72,16 @@ export class FeedingsByFeedingComponent implements OnInit {
       xAxis: {
         categories: _.map(feedings[0].feedings, 'date')
       },
-      yAxis: {
+      yAxis: [{
         title: {
           text: 'Volume (ml)'
         }
-      },
+      }, {
+        title: {
+          text: 'Total Volume (ml)'
+        },
+        opposite: true
+      }],
       series: series
     };
 
