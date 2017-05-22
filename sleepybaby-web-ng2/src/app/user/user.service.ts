@@ -43,7 +43,7 @@ export class UserService {
     return this.http
       .get(this.usersUrl + '/me', {'headers': headers})
       .toPromise()
-      .then(res => res.json())
+      .then(res => res.json().result.me)
       .catch(this.handleError.bind(this));
   }
 
