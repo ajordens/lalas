@@ -52,7 +52,7 @@ class DiaperController @Autowired constructor(val feedingDataSource: FeedingData
         f.key,
         f.value.sumBy { it.diaperTypes.size }
       )
-    }
+    }.sortedByDescending { it.date  }
 
     return GenericResponse.ok(Pair("diapers", diapers))
   }
