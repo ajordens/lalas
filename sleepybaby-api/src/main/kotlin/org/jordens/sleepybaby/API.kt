@@ -19,4 +19,10 @@ package org.jordens.sleepybaby
 data class GenericResponse(val status: String,
                            val code: Int,
                            val messages: List<String>,
-                           val result: Map<String, Any>)
+                           val result: Map<String, Any>) {
+
+  companion object Factory {
+    fun ok(result: Map<String, Any>) = GenericResponse("ok", 200, emptyList(), result)
+    fun ok(result: Pair<String, Any>) = GenericResponse("ok", 200, emptyList(), mapOf(result))
+  }
+}

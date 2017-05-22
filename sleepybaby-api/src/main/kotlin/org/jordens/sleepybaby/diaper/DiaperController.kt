@@ -2,6 +2,7 @@ package org.jordens.sleepybaby.diaper
 
 import org.jordens.sleepybaby.Feeding
 import org.jordens.sleepybaby.FeedingDataSource
+import org.jordens.sleepybaby.GenericResponse
 import org.jordens.sleepybaby.feeding.DailyFeedingAggregate
 import org.jordens.sleepybaby.feeding.FeedingController
 import org.jordens.sleepybaby.feeding.Summary
@@ -36,15 +37,15 @@ class DiaperController @Autowired constructor(val feedingDataSource: FeedingData
   val dateFormatter = SimpleDateFormat("HH:mm")
 
   @GetMapping
-  fun all(): List<Diaper> = feedingDataSource.feedings().flatMap { feeding ->
+  fun all(): GenericResponse = GenericResponse.ok(Pair("diapers", feedingDataSource.feedings().flatMap { feeding ->
     feeding.diaperTypes.map {
       Diaper(feeding.date, feeding.time, it)
     }
-  }
+  }))
 
   @GetMapping("/byDay")
   fun allByDay(@RequestParam(value = "hour", required = false, defaultValue = "10:00") hour: String,
-               @RequestParam(value = "sort", required = false, defaultValue = "date") sort: String): List<DailyDiaperAggregate> {
+               @RequestParam(value = "sort", required = false, defaultValue = "date") sort: String): GenericResponse {
     val feedingsByDay = feedingDataSource.feedingsByDay(hour)
     val diapers = feedingsByDay.map { f ->
       DailyDiaperAggregate(
@@ -53,7 +54,7 @@ class DiaperController @Autowired constructor(val feedingDataSource: FeedingData
       )
     }
 
-    return diapers
+    return GenericResponse.ok(Pair("diapers", diapers))
   }
 }
 

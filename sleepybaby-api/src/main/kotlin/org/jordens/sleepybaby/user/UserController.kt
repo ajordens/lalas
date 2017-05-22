@@ -27,12 +27,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/users")
 class UserController @Autowired constructor(val configurationProperties: FeedingsConfigurationProperties) {
   @GetMapping("/me")
-  fun me(): GenericResponse = GenericResponse(
-    "ok",
-    200,
-    listOf(),
-    mapOf(Pair("me", UserDetails(configurationProperties.name)))
-  )
+  fun me(): GenericResponse = GenericResponse.ok(Pair("me", UserDetails(configurationProperties.name)))
 }
 
 data class UserDetails(val name: String)

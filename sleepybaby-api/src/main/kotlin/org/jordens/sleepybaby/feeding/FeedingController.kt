@@ -18,6 +18,7 @@ package org.jordens.sleepybaby.feeding
 
 import org.jordens.sleepybaby.Feeding
 import org.jordens.sleepybaby.FeedingDataSource
+import org.jordens.sleepybaby.GenericResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -43,13 +44,14 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
   val dateFormatter = SimpleDateFormat("HH:mm")
 
   @GetMapping
-  fun all(): List<Feeding> = feedingDataSource.feedings()
+  fun all(): GenericResponse = GenericResponse.ok(mapOf(Pair("feedings", feedingDataSource.feedings())))
 
   @GetMapping("/byFeeding")
   fun allByFeeding(@RequestParam(value = "hour", required = false, defaultValue = "10:00") hour: String,
-                   @RequestParam(value = "feeding", required = false) feeding: Int?): List<FeedingAggregate> {
+                   @RequestParam(value = "feeding", required = false) feeding: Int?): GenericResponse {
     require(feeding == null || feeding > 0) { "feeding must be > 0" }
 
+    // no more than 10 feedings in a day!
     val feedingAggregates = (1..10).map { FeedingAggregate(it, ArrayList(), HashMap()) }
 
     feedingDataSource.feedingsByDay(hour).forEach {
@@ -73,16 +75,16 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
 
     feedingAggregates[currentIndex].current = true
 
-    if (feeding != null) {
-      return feedingAggregates.filter { it.feeding == feeding }
+    return if (feeding != null) {
+      GenericResponse.ok(Pair("feedings", feedingAggregates.filter { it.feeding == feeding }))
+    } else {
+      GenericResponse.ok(Pair("feedings", feedingAggregates.filter { !it.feedings.isEmpty() && it.feedings.size > 2 }))
     }
-
-    return feedingAggregates.filter { !it.feedings.isEmpty() && it.feedings.size > 2 }
   }
 
   @GetMapping("/byDay")
   fun allByDay(@RequestParam(value = "hour", required = false, defaultValue = "10:00") hour: String,
-               @RequestParam(value = "sort", required = false, defaultValue = "date") sort: String): List<DailyFeedingAggregate> {
+               @RequestParam(value = "sort", required = false, defaultValue = "date") sort: String): GenericResponse {
     val feedingsByDay = feedingDataSource.feedingsByDay(hour)
     val feedings = feedingsByDay.map { f ->
       DailyFeedingAggregate(
@@ -96,14 +98,16 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
     }
 
     // figure out how to make a generic comparator based off of `sort`
-    when (sort) {
-      "numberOfFeedings" -> return feedings.sortedByDescending { it.numberOfFeedings }
-      "milkVolumeTotalMilliliters" -> return feedings.sortedByDescending { it.milkVolumeTotalMilliliters }
-      "milkVolumeAverageMilliliters" -> return feedings.sortedByDescending { it.milkVolumeAverageMilliliters }
-      "diaperCount" -> return feedings.sortedByDescending { it.diaperCount }
-      "nursingDurationMinutes" -> return feedings.sortedByDescending { it.nursingDurationMinutes }
-      else -> return feedings.sortedByDescending { it.date }
+    val feedingsSorted = when (sort) {
+      "numberOfFeedings" -> feedings.sortedByDescending { it.numberOfFeedings }
+      "milkVolumeTotalMilliliters" -> feedings.sortedByDescending { it.milkVolumeTotalMilliliters }
+      "milkVolumeAverageMilliliters" -> feedings.sortedByDescending { it.milkVolumeAverageMilliliters }
+      "diaperCount" -> feedings.sortedByDescending { it.diaperCount }
+      "nursingDurationMinutes" -> feedings.sortedByDescending { it.nursingDurationMinutes }
+      else -> feedings.sortedByDescending { it.date }
     }
+
+    return GenericResponse.ok(Pair("feedings", feedingsSorted))
   }
 
   private fun determineCurrentIndex(feedingTimes: List<String?>, currentTime: String): Int {

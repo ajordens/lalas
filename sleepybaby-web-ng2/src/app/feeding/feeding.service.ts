@@ -42,7 +42,7 @@ export class FeedingService {
     return this.http
       .get(this.feedingsUrl + '/byDay', {'headers': headers})
       .toPromise()
-      .then(res => res.json())
+      .then(res => res.json().result.feedings)
       .catch(this.handleError.bind(this));
   }
 
@@ -59,7 +59,7 @@ export class FeedingService {
     return this.http
       .get(this.feedingsUrl + '/byFeeding', {'headers': headers})
       .toPromise()
-      .then(res => res.json())
+      .then(res => res.json().result.feedings)
       .catch(this.handleError.bind(this));
   }
 
