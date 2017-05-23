@@ -21,11 +21,11 @@ import * as _ from "lodash";
 
 @Component({
   moduleId: module.id,
-  selector: 'feedings-byFeeding',
-  templateUrl: './feedings-byFeeding.component.html',
-  styleUrls: ['./feedings-byFeeding.component.scss']
+  selector: 'feedings-byTime',
+  templateUrl: './feedings-byTime.component.html',
+  styleUrls: ['./feedings-byTime.component.scss']
 })
-export class FeedingsByFeedingComponent implements OnInit {
+export class FeedingsByTimeComponent implements OnInit {
   feedings: Array<any> = [];
 
   chartOptions: Object;
