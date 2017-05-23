@@ -19,12 +19,9 @@ package org.jordens.sleepybaby.feeding
 import org.jordens.sleepybaby.Feeding
 import org.jordens.sleepybaby.FeedingDataSource
 import org.jordens.sleepybaby.GenericResponse
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -46,22 +43,22 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
   @GetMapping
   fun all(): GenericResponse = GenericResponse.ok(mapOf(Pair("feedings", feedingDataSource.feedings())))
 
-  @GetMapping("/byFeeding")
-  fun allByFeeding(@RequestParam(value = "hour", required = false, defaultValue = "10:00") hour: String,
-                   @RequestParam(value = "feeding", required = false) feeding: Int?): GenericResponse {
+  @GetMapping("/byTime")
+  fun allByTime(@RequestParam(value = "hour", required = false, defaultValue = "10:00") hour: String,
+                @RequestParam(value = "feeding", required = false) feeding: Int?): GenericResponse {
     require(feeding == null || feeding > 0) { "feeding must be > 0" }
 
     // no more than 10 feedings in a day!
-    val feedingAggregates = (1..10).map { FeedingAggregate(it, ArrayList(), HashMap()) }
+    val feedingSummariesByTime = (1..10).map { FeedingSummaryByTime(it, ArrayList(), HashMap()) }
 
     feedingDataSource.feedingsByDay(hour).forEach {
       val milkVolumeTotalMilliliters = it.value.sumBy { it.milkVolumeMilliliters }
       it.value.forEachIndexed { i, feeding ->
-        feedingAggregates[i].feedings.add(feeding.copy(milkVolumeTotalMilliliters = milkVolumeTotalMilliliters))
+        feedingSummariesByTime[i].feedings.add(feeding.copy(milkVolumeTotalMilliliters = milkVolumeTotalMilliliters))
       }
     }
 
-    feedingAggregates.forEach {
+    feedingSummariesByTime.forEach {
       val lastSevenDays = it.feedings.reversed().subList(0, Math.min(it.feedings.size, 7))
       it.summaries["sevenDay"] = Summary(
         Math.round(lastSevenDays.map { it.milkVolumeMilliliters }.average()).toInt(),
@@ -70,18 +67,18 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
     }
 
     val currentIndex = determineCurrentIndex(
-      feedingAggregates
+      feedingSummariesByTime
         .filter { !it.feedings.isEmpty() && it.feedings.size > 2 }
         .map { it.summaries["sevenDay"]?.timesOfDay?.first() },
       dateFormatter.format(Date())
     )
 
-    feedingAggregates[currentIndex].current = true
+    feedingSummariesByTime[currentIndex].current = true
 
     return if (feeding != null) {
-      GenericResponse.ok(Pair("feedings", feedingAggregates.filter { it.feeding == feeding }))
+      GenericResponse.ok(Pair("feedingSummariesByTime", feedingSummariesByTime.filter { it.feeding == feeding }))
     } else {
-      GenericResponse.ok(Pair("feedings", feedingAggregates.filter { !it.feedings.isEmpty() && it.feedings.size > 2 }))
+      GenericResponse.ok(Pair("feedingSummariesByTime", feedingSummariesByTime.filter { !it.feedings.isEmpty() && it.feedings.size > 2 }))
     }
   }
 
@@ -90,7 +87,7 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
                @RequestParam(value = "sort", required = false, defaultValue = "date") sort: String): GenericResponse {
     val feedingsByDay = feedingDataSource.feedingsByDay(hour)
     val feedings = feedingsByDay.map { f ->
-      DailyFeedingAggregate(
+      FeedingSummaryByDay(
         f.key,
         f.value.size,
         f.value.sumBy { it.milkVolumeMilliliters },
@@ -110,7 +107,16 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
       else -> feedings.sortedByDescending { it.date }
     }
 
-    return GenericResponse.ok(Pair("feedings", feedingsSorted))
+    return GenericResponse.ok(Pair("feedingSummariesByDay", feedingsSorted))
+  }
+
+  @GetMapping("/byDay/{date}")
+  fun forDate(@PathVariable(value = "date") date: String,
+              @RequestParam(value = "hour", required = false, defaultValue = "10:00") hour: String): GenericResponse {
+    // validate that `date` has feedings
+
+    val feedingsByDay = feedingDataSource.feedingsByDay(hour)
+    return GenericResponse.ok(Pair("feedings", feedingsByDay.getOrDefault(date, emptyList())))
   }
 
   private fun determineCurrentIndex(feedingTimes: List<String?>, currentTime: String): Int {
@@ -136,17 +142,17 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
   }
 }
 
-data class DailyFeedingAggregate(val date: String,
-                                 val numberOfFeedings: Int,
-                                 val milkVolumeTotalMilliliters: Int,
-                                 val milkVolumeAverageMilliliters: Int,
-                                 val diaperCount: Int,
-                                 val nursingDurationMinutes: Int)
+data class FeedingSummaryByDay(val date: String,
+                               val numberOfFeedings: Int,
+                               val milkVolumeTotalMilliliters: Int,
+                               val milkVolumeAverageMilliliters: Int,
+                               val diaperCount: Int,
+                               val nursingDurationMinutes: Int)
 
-data class FeedingAggregate(val feeding: Int,
-                            val feedings: MutableList<Feeding>,
-                            val summaries: MutableMap<String, Summary>,
-                            var current: Boolean = false)
+data class FeedingSummaryByTime(val feeding: Int,
+                                val feedings: MutableList<Feeding>,
+                                val summaries: MutableMap<String, Summary>,
+                                var current: Boolean = false)
 
 
 data class Summary(val milkVolumeAverageMilliliters: Int,

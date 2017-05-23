@@ -16,6 +16,9 @@
 
 package org.jordens.sleepybaby
 
+/**
+ * Based on ideas described @ https://medium.com/@shazow/how-i-design-json-api-responses-71900f00f2db
+ */
 data class GenericResponse(val status: String,
                            val code: Int,
                            val messages: List<String>,

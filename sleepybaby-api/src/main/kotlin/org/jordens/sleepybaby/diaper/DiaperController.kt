@@ -1,11 +1,7 @@
 package org.jordens.sleepybaby.diaper
 
-import org.jordens.sleepybaby.Feeding
 import org.jordens.sleepybaby.FeedingDataSource
 import org.jordens.sleepybaby.GenericResponse
-import org.jordens.sleepybaby.feeding.DailyFeedingAggregate
-import org.jordens.sleepybaby.feeding.FeedingController
-import org.jordens.sleepybaby.feeding.Summary
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -48,17 +44,17 @@ class DiaperController @Autowired constructor(val feedingDataSource: FeedingData
                @RequestParam(value = "sort", required = false, defaultValue = "date") sort: String): GenericResponse {
     val feedingsByDay = feedingDataSource.feedingsByDay(hour)
     val diapers = feedingsByDay.map { f ->
-      DailyDiaperAggregate(
+      DiaperSummaryByDay(
         f.key,
         f.value.sumBy { it.diaperTypes.size }
       )
-    }.sortedByDescending { it.date  }
+    }.sortedByDescending { it.date }
 
-    return GenericResponse.ok(Pair("diapers", diapers))
+    return GenericResponse.ok(Pair("diaperSummariesByDay", diapers))
   }
 }
 
 data class Diaper(val date: String, val time: String, val diaperType: String)
 
-data class DailyDiaperAggregate(val date: String,
-                                val diaperCount: Int)
+data class DiaperSummaryByDay(val date: String,
+                              val diaperCount: Int)

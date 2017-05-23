@@ -42,11 +42,11 @@ export class FeedingService {
     return this.http
       .get(this.feedingsUrl + '/byDay', {'headers': headers})
       .toPromise()
-      .then(res => res.json().result.feedings)
+      .then(res => res.json().result.feedingSummariesByDay)
       .catch(this.handleError.bind(this));
   }
 
-  getFeedingsByFeeding(): Promise<Array<FeedingAggregate>> {
+  getFeedingsByTime(): Promise<Array<FeedingAggregate>> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });
@@ -57,9 +57,9 @@ export class FeedingService {
     }
 
     return this.http
-      .get(this.feedingsUrl + '/byFeeding', {'headers': headers})
+      .get(this.feedingsUrl + '/byTime', {'headers': headers})
       .toPromise()
-      .then(res => res.json().result.feedings)
+      .then(res => res.json().result.feedingSummariesByTime)
       .catch(this.handleError.bind(this));
   }
 

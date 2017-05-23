@@ -35,7 +35,7 @@ export class FeedingsByFeedingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.feedingService.getFeedingsByFeeding()
+    this.feedingService.getFeedingsByTime()
       .then(feedings => {
         this.feedings = feedings;
 

@@ -42,7 +42,7 @@ export class DiaperService {
     return this.http
       .get(this.diapersUrl + '/byDay', {'headers': headers})
       .toPromise()
-      .then(res => res.json().result.diapers)
+      .then(res => res.json().result.diaperSummariesByDay)
       .catch(this.handleError.bind(this));
   }
 

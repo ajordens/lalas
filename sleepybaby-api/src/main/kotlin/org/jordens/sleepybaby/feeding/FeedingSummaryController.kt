@@ -40,9 +40,3 @@ class FeedingSummaryController @Autowired constructor(val feedingDataSource: Fee
   fun all(): List<Feeding> = feedingDataSource.feedings()
 }
 
-data class FeedingSummary(val date: String,
-                          val numberOfFeedings: Int,
-                          val milkVolumeTotalMilliliters: Int,
-                          val milkVolumeAverageMilliliters: Int,
-                          val diaperCount: Int,
-                          val nursingDurationMinutes: Int)
