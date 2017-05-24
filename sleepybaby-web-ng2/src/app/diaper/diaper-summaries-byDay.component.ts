@@ -2,17 +2,17 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {Router} from "@angular/router";
 
 import * as _ from "lodash";
-import {DiaperAggregate} from "./diaper-aggregate";
 import {DiaperService} from "./diaper.service";
+import {DiaperSummary} from "./diaper-summary";
 
 @Component({
   moduleId: module.id,
   selector: 'diapers-byDay',
-  templateUrl: './diapers-byDay.component.html',
-  styleUrls: ['./diapers-byDay.component.scss']
+  templateUrl: './diaper-summaries-byDay.component.html',
+  styleUrls: ['./diaper-summaries-byDay.component.scss']
 })
-export class DiapersByDayComponent implements OnInit {
-  days: DiaperAggregate[] = [];
+export class DiaperSummariesByDayComponent implements OnInit {
+  days: DiaperSummary[] = [];
   sortField: string = 'date';
   sortDirection: string = 'desc';
 

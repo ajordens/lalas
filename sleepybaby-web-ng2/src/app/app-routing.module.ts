@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
-import {FeedingAggregateComponent} from "./feeding/feeding-aggregate.component";
 import {LoginComponent} from "./user/login.component";
+import {FeedingSummariesByDayComponent} from "./feeding/feeding-summaries-byDay.component";
 
 const routes: Routes = [
   {
@@ -17,7 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'days/:id',
-    component: FeedingAggregateComponent
+    component: FeedingSummariesByDayComponent
   },
   {
     path: 'login',

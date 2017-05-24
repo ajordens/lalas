@@ -6,10 +6,10 @@ import * as _ from "lodash";
 @Component({
   moduleId: module.id,
   selector: 'feedings-byTime',
-  templateUrl: './feedings-byTime.component.html',
-  styleUrls: ['./feedings-byTime.component.scss']
+  templateUrl: './feeding-summaries-byTime.component.html',
+  styleUrls: ['./feeding-summaries-byTime.component.scss']
 })
-export class FeedingsByTimeComponent implements OnInit {
+export class FeedingSummariesByTimeComponent implements OnInit {
   feedings: Array<any> = [];
 
   chartOptions: Object;

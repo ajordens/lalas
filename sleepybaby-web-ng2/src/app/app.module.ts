@@ -7,17 +7,17 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule, routedComponents} from './app-routing.module';
 import {UserService} from "./user/user.service";
 import {FeedingService} from "./feeding/feeding.service";
-import {FeedingAggregateComponent} from "./feeding/feeding-aggregate.component";
 import {FeedingsByDayComponent} from "./feeding/feedings-byDay.component";
-import {FeedingsByTimeComponent} from "./feeding/feedings-byTime.component";
 
 import { Ng2HighchartsModule } from 'ng2-highcharts';
 import {LoginComponent} from "./user/login.component";
 import {ExceptionHandlerService} from "./exceptions/exception-handler.service";
 import {PageFooterComponent} from "./layout/page-footer.component";
 import {PageHeaderComponent} from "./layout/page-header.component";
-import {DiapersByDayComponent} from "./diaper/diapers-byDay.component";
 import {DiaperService} from "./diaper/diaper.service";
+import {FeedingSummariesByTimeComponent} from "./feeding/feeding-summaries-byTime";
+import {FeedingSummariesByDayComponent} from "./feeding/feeding-summaries-byDay.component";
+import {DiaperSummariesByDayComponent} from "./diaper/diaper-summaries-byDay.component";
 
 @NgModule({
   imports: [
@@ -29,10 +29,11 @@ import {DiaperService} from "./diaper/diaper.service";
   ],
   declarations: [
     AppComponent,
-    FeedingAggregateComponent,
     FeedingsByDayComponent,
-    FeedingsByTimeComponent,
-    DiapersByDayComponent,
+    FeedingSummariesByTimeComponent,
+    FeedingSummariesByDayComponent,
+    FeedingsByDayComponent,
+    DiaperSummariesByDayComponent,
     LoginComponent,
     PageFooterComponent,
     PageHeaderComponent,

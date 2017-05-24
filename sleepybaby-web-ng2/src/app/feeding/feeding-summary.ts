@@ -1,4 +1,4 @@
-export class FeedingAggregate {
+export class FeedingSummary {
   date: string;
   numberOfFeedings: number;
   milkVolumeTotalMilliliters: number;

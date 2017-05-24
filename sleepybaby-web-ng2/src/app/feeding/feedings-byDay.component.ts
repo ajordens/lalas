@@ -1,83 +1,34 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {FeedingAggregate} from "./feeding-aggregate";
-import {Router} from "@angular/router";
-import {FeedingService} from "./feeding.service";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ActivatedRoute, Params} from '@angular/router';
 
-import * as _ from "lodash";
+import {FeedingService} from "./feeding.service";
+import {FeedingSummary} from "./feeding-summary";
 
 @Component({
   moduleId: module.id,
-  selector: 'feedings-byDay',
+  selector: 'my-feeding-aggregate',
   templateUrl: './feedings-byDay.component.html',
-  styleUrls: ['./feedings-byDay.component.scss']
+  styleUrls: ['./feedings-byDay.component.css']
 })
 export class FeedingsByDayComponent implements OnInit {
-  days: FeedingAggregate[] = [];
-  sortField: string = 'date';
-  sortDirection: string = 'desc';
+  @Input() feedingSummary: FeedingSummary;
+  @Output() close = new EventEmitter();
+  error: any;
+  navigated = false; // true if navigated here
 
-  chartOptions: Object;
-  showChart: boolean = false;
-
-  constructor(private router: Router,
-              private feedingService: FeedingService) {
+  constructor(private feedingService: FeedingService,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.feedingService.getFeedingsByDay()
-      .then(feedings => {
-        this.days = feedings;
-        this.refresh(feedings);
-      });
-  }
-
-  sort(field): void {
-    let direction;
-
-    if (field === this.sortField) {
-      direction = (this.sortDirection == 'desc') ? 'asc' : 'desc';
-    } else {
-      direction = 'desc';
-    }
-
-    this.feedingService.getFeedingsByDay()
-      .then(feedings => {
-        this.days = _.orderBy(feedings, [field], [direction]);
-        this.sortField = field;
-        this.sortDirection = direction;
-
-        this.refresh(feedings);
-      });
-  }
-
-  gotoFeedingAggregate(feedingAggregate: FeedingAggregate): void {
-    let link = ['/days/', feedingAggregate.date];
-    this.router.navigate(link);
-  }
-
-  private refresh(feedings): void {
-    feedings = _.orderBy(feedings, ['date'], ['asc']);
-
-    this.chartOptions = {
-      chart: {
-        type: 'line'
-      },
-      title: {
-        text: 'Consumption per Day'
-      },
-      xAxis: {
-        categories: _.map(feedings, 'date')
-      },
-      yAxis: {
-        title: {
-          text: 'Volume (ml)'
-        }
-      },
-      series: [
-        {data: _.map(feedings, 'milkVolumeAverageMilliliters'), name: 'Average Volume (ml)'}
-      ]
-    };
-
-    this.showChart = true;
+    this.route.params.forEach((params: Params) => {
+      if (params['id'] !== undefined) {
+        let id = +params['id'];
+        this.navigated = true;
+        // getDailyFeeding(id);
+        this.feedingService.getFeedingsByDay()
+          .then(feedings => this.feedingSummary = feedings[0]);
+      }
+    });
   }
 }
