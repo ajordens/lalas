@@ -41,9 +41,9 @@ export class FeedingSummariesByTimeComponent implements OnInit {
     });
 
     series.push({
-      data: _.map(feedings[0].feedings, 'milkVolumeTotalMilliliters'),
-      name: 'Overall',
-      yAxis: 1
+      data: _.map(feedings[0].feedings, 'milkVolumeAverageMilliliters'),
+      name: 'Daily Average',
+      yAxis: 0
     });
 
     this.chartOptions = {
@@ -60,11 +60,6 @@ export class FeedingSummariesByTimeComponent implements OnInit {
         title: {
           text: 'Volume (ml)'
         }
-      }, {
-        title: {
-          text: 'Total Volume (ml)'
-        },
-        opposite: true
       }],
       series: series
     };

@@ -52,9 +52,10 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
     val feedingSummariesByTime = (1..10).map { FeedingSummaryByTime(it, ArrayList(), HashMap()) }
 
     feedingDataSource.feedingsByDay(hour).forEach {
-      val milkVolumeTotalMilliliters = it.value.sumBy { it.milkVolumeMilliliters }
+      // per feeding time average
+      val milkVolumeAverageMilliliters = Math.round(it.value.sumBy { it.milkVolumeMilliliters } / it.value.size.toFloat())
       it.value.forEachIndexed { i, feeding ->
-        feedingSummariesByTime[i].feedings.add(feeding.copy(milkVolumeTotalMilliliters = milkVolumeTotalMilliliters))
+        feedingSummariesByTime[i].feedings.add(feeding.copy(milkVolumeAverageMilliliters = milkVolumeAverageMilliliters))
       }
     }
 

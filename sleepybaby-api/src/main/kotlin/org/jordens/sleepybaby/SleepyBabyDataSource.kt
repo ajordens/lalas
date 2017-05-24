@@ -86,4 +86,4 @@ data class Feeding(val date: String,
                    val bodyTemperature: Double?,
                    val diaperTypes: Collection<String>,
                    val notes: String,
-                   val milkVolumeTotalMilliliters: Int? = null) // this is a hack
+                   val milkVolumeAverageMilliliters: Int? = null) // this is a hack
