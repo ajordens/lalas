@@ -1,7 +1,12 @@
 buildscript {
   ext {
-    kotlinVersion = '1.1.2'
-    springBootVersion = '1.5.3.RELEASE'
+    versions = [
+        kotlin    : '1.1.2',
+        springBoot: '1.5.3.RELEASE',
+        hamkrest  : "1.4.0.0",
+        junit     : "1.0.0-M4",
+        spek      : "1.1.1"
+    ]
   }
   repositories {
     jcenter()
