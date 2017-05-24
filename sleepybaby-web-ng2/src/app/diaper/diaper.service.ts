@@ -3,8 +3,8 @@ import {Headers, Http, Response} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import {DiaperAggregate} from './diaper-aggregate';
 import {ExceptionHandlerService} from "../exceptions/exception-handler.service";
+import {DiaperSummary} from "./diaper-summary";
 
 @Injectable()
 export class DiaperService {
@@ -13,7 +13,7 @@ export class DiaperService {
   constructor(private http: Http, private exception: ExceptionHandlerService) {
   }
 
-  getDiapersByDay(): Promise<Array<DiaperAggregate>> {
+  getDiapersByDay(): Promise<Array<DiaperSummary>> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });

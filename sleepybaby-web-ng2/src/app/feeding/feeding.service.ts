@@ -3,8 +3,8 @@ import {Headers, Http, Response} from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import {FeedingAggregate} from './feeding-aggregate';
 import {ExceptionHandlerService} from "../exceptions/exception-handler.service";
+import {FeedingSummary} from "./feeding-summary";
 
 @Injectable()
 export class FeedingService {
@@ -13,7 +13,7 @@ export class FeedingService {
   constructor(private http: Http, private exception: ExceptionHandlerService) {
   }
 
-  getFeedingsByDay(): Promise<Array<FeedingAggregate>> {
+  getFeedingsByDay(): Promise<Array<FeedingSummary>> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });
@@ -30,7 +30,7 @@ export class FeedingService {
       .catch(this.handleError.bind(this));
   }
 
-  getFeedingsByTime(): Promise<Array<FeedingAggregate>> {
+  getFeedingsByTime(): Promise<Array<FeedingSummary>> {
     let headers = new Headers({
       'Content-Type': 'application/json'
     });
