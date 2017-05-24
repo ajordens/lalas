@@ -148,7 +148,11 @@ data class FeedingSummaryByDay(val date: String,
                                val milkVolumeTotalMilliliters: Int,
                                val milkVolumeAverageMilliliters: Int,
                                val diaperCount: Int,
-                               val nursingDurationMinutes: Int)
+                               val nursingDurationMinutes: Int) {
+  var milkVolumeAverageOunces = Math.round(milkVolumeAverageMilliliters/ 29.5735 * 10) / 10.0
+  var milkVolumeTotalOunces = Math.round(milkVolumeTotalMilliliters / 29.5735 * 10) / 10.0
+
+}
 
 data class FeedingSummaryByTime(val feeding: Int,
                                 val feedings: MutableList<Feeding>,
