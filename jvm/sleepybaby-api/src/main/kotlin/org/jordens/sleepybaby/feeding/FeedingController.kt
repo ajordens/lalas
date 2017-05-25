@@ -90,7 +90,6 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
         f.key,
         f.value.size,
         f.value.sumBy { it.milkVolumeMilliliters },
-        Math.round(f.value.sumBy { it.milkVolumeMilliliters } / f.value.size.toFloat()),
         f.value.sumBy { it.diaperTypes.size },
         f.value.sumBy { it.nursingDurationMinutes }
       )

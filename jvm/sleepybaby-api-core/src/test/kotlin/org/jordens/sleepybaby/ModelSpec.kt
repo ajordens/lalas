@@ -23,14 +23,18 @@ import org.junit.jupiter.api.Assertions
 
 object FeedingSummaryByDaySpec : Spek({
   describe("feeding summary by day") {
-    val summary = FeedingSummaryByDay("2017-01-01", 7, 290, 30, 7, 0)
+    val summary = FeedingSummaryByDay("2017-01-01", 7, 290, 10, 0)
 
     it("should convert milkVolumeTotalMilliliters to ounces") {
       Assertions.assertEquals(9.8, summary.milkVolumeTotalOunces)
     }
 
     it("should convert milkVolumeAverageMilliliters to ounces") {
-      Assertions.assertEquals(1.0, summary.milkVolumeAverageOunces)
+      Assertions.assertEquals(1.4, summary.milkVolumeAverageOunces)
+    }
+
+    it("should calculate milkVolumeAverageMilliliters") {
+      Assertions.assertEquals(41, summary.milkVolumeAverageMilliliters)
     }
   }
 })
