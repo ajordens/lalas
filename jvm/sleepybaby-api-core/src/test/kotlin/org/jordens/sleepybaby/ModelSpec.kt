@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package org.jordens.sleepybaby.ext
+package org.jordens.sleepybaby
 
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions
 
-object DateSpec : Spek({
-  describe("date extensions") {
-    val today = parseDate("yyyy-MM-dd", "2017-05-20")
+object FeedingSummaryByDaySpec : Spek({
+  describe("feeding summary by day") {
+    val summary = FeedingSummaryByDay("2017-01-01", 7, 290, 30, 7, 0)
 
-    it("should return yesterday's date") {
-      val yesterday = today.yesterday()
-      assertEquals("2017-05-19", formatDate("yyyy-MM-dd", yesterday))
+    it("should convert milkVolumeTotalMilliliters to ounces") {
+      Assertions.assertEquals(9.8, summary.milkVolumeTotalOunces)
+    }
+
+    it("should convert milkVolumeAverageMilliliters to ounces") {
+      Assertions.assertEquals(1.0, summary.milkVolumeAverageOunces)
     }
   }
 })

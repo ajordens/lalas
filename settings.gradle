@@ -1,1 +1,1 @@
-include 'jvm:sleepybaby-api', 'sleepybaby-web-ng2'
+include 'jvm:sleepybaby-api', 'jvm:sleepybaby-api-core', 'sleepybaby-web-ng2'

@@ -13,6 +13,8 @@ apply plugin: 'nebula.ospackage'
 apply plugin: 'application'
 
 dependencies {
+  compile project(':jvm:sleepybaby-api-core')
+
   compile('org.springframework.boot:spring-boot-starter-security')
   compile('org.springframework.boot:spring-boot-starter-web')
 

@@ -1,5 +1,7 @@
 package org.jordens.sleepybaby.diaper
 
+import org.jordens.sleepybaby.Diaper
+import org.jordens.sleepybaby.DiaperSummaryByDay
 import org.jordens.sleepybaby.FeedingDataSource
 import org.jordens.sleepybaby.GenericResponse
 import org.slf4j.LoggerFactory
@@ -53,8 +55,3 @@ class DiaperController @Autowired constructor(val feedingDataSource: FeedingData
     return GenericResponse.ok(Pair("diaperSummariesByDay", diapers))
   }
 }
-
-data class Diaper(val date: String, val time: String, val diaperType: String)
-
-data class DiaperSummaryByDay(val date: String,
-                              val diaperCount: Int)

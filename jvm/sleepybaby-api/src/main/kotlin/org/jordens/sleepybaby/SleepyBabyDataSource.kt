@@ -77,13 +77,3 @@ class FeedingDataSource @Autowired constructor(val configuration: FeedingsConfig
     logger.info("Fetched ${feedings.get().size} feedings from $sourceUrl")
   }
 }
-
-data class Feeding(val date: String,
-                   val time: String,
-                   val nursingDurationMinutes: Int,
-                   val milkType: String,
-                   val milkVolumeMilliliters: Int,
-                   val bodyTemperature: Double?,
-                   val diaperTypes: Collection<String>,
-                   val notes: String,
-                   val milkVolumeAverageMilliliters: Int? = null) // this is a hack

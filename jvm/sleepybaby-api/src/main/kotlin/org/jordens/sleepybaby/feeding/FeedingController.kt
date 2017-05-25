@@ -16,9 +16,7 @@
 
 package org.jordens.sleepybaby.feeding
 
-import org.jordens.sleepybaby.Feeding
-import org.jordens.sleepybaby.FeedingDataSource
-import org.jordens.sleepybaby.GenericResponse
+import org.jordens.sleepybaby.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -142,24 +140,3 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
     )
   }
 }
-
-data class FeedingSummaryByDay(val date: String,
-                               val numberOfFeedings: Int,
-                               val milkVolumeTotalMilliliters: Int,
-                               val milkVolumeAverageMilliliters: Int,
-                               val diaperCount: Int,
-                               val nursingDurationMinutes: Int) {
-  // ounces are rounded to one decimal
-  var milkVolumeAverageOunces = Math.round(milkVolumeAverageMilliliters/ 29.5735 * 10) / 10.0
-  var milkVolumeTotalOunces = Math.round(milkVolumeTotalMilliliters / 29.5735 * 10) / 10.0
-
-}
-
-data class FeedingSummaryByTime(val feeding: Int,
-                                val feedings: MutableList<Feeding>,
-                                val summaries: MutableMap<String, Summary>,
-                                var current: Boolean = false)
-
-
-data class Summary(val milkVolumeAverageMilliliters: Int,
-                   val timesOfDay: Collection<String>)
