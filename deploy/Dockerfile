@@ -1,6 +1,6 @@
 FROM frolvlad/alpine-oraclejdk8:slim
 
-COPY sleepybaby-api/build/install /tmp/
+COPY jvm/sleepybaby-api/build/install /tmp/
 
 ENV JAVA_OPTS=""
 
