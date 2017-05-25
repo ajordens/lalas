@@ -1,13 +1,14 @@
 buildscript {
   ext {
     versions = [
-        kotlin       : '1.1.2',
-        springBoot   : '1.5.3.RELEASE',
-        hamkrest     : "1.4.0.0",
-        junit        : "1.0.0-M4",
-        spek         : "1.1.1",
-        nebulaRelease: "4.2.0"
-
+        hamkrest       : '1.4.0.0',
+        junit          : '1.0.0-M4',
+        jupiter        : '5.0.0-M4',
+        kotlin         : '1.1.2',
+        nebulaOsPackage: '4.4.0',
+        nebulaRelease  : '4.2.0',
+        spek           : '1.1.1',
+        springBoot     : '1.5.3.RELEASE',
     ]
   }
 
