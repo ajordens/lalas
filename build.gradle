@@ -1,18 +1,25 @@
 buildscript {
   ext {
     versions = [
-        kotlin    : '1.1.2',
-        springBoot: '1.5.3.RELEASE',
-        hamkrest  : "1.4.0.0",
-        junit     : "1.0.0-M4",
-        spek      : "1.1.1"
+        kotlin       : '1.1.2',
+        springBoot   : '1.5.3.RELEASE',
+        hamkrest     : "1.4.0.0",
+        junit        : "1.0.0-M4",
+        spek         : "1.1.1",
+        nebulaRelease: "4.2.0"
+
     ]
   }
+
   repositories {
     jcenter()
   }
+
   dependencies {
-    classpath 'com.netflix.nebula:nebula-release-plugin:4.2.0'
+    classpath "com.netflix.nebula:nebula-release-plugin:${versions.nebulaRelease}"
+    classpath "com.netflix.nebula:nebula-kotlin-plugin:${versions.kotlin}"
+
+    classpath "org.junit.platform:junit-platform-gradle-plugin:${versions.junit}"
   }
 }
 

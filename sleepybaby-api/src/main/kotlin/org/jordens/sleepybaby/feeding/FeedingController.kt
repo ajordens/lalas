@@ -149,6 +149,7 @@ data class FeedingSummaryByDay(val date: String,
                                val milkVolumeAverageMilliliters: Int,
                                val diaperCount: Int,
                                val nursingDurationMinutes: Int) {
+  // ounces are rounded to one decimal
   var milkVolumeAverageOunces = Math.round(milkVolumeAverageMilliliters/ 29.5735 * 10) / 10.0
   var milkVolumeTotalOunces = Math.round(milkVolumeTotalMilliliters / 29.5735 * 10) / 10.0
 

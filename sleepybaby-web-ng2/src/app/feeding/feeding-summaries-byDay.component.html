@@ -8,8 +8,8 @@
     <tr>
       <th class="col-xl-2" (click)="sort('date')">Date</th>
       <th class="col-xl-2" (click)="sort('numberOfFeedings')"># of Feedings</th>
-      <th class="col-xl-2" (click)="sort('milkVolumeAverageMilliliters')">Average (ml)</th>
-      <th class="col-xl-2" (click)="sort('milkVolumeTotalMilliliters')">Total (ml)</th>
+      <th class="col-xl-2" (click)="sort('milkVolumeAverageMilliliters')">Average</th>
+      <th class="col-xl-2" (click)="sort('milkVolumeTotalMilliliters')">Total</th>
       <th class="col-xl-2" (click)="sort('diaperCount')">Diaper Count</th>
       <th class="col-xl-2" (click)="sort('nursingDurationMinutes')">Nursing (min)</th>
     </tr>
@@ -18,8 +18,8 @@
     <tr *ngFor="let day of days" (click)="gotoFeedingAggregate(day)">
       <td class="col-xl-2">{{day.date}}</td>
       <td class="col-xl-2">{{day.numberOfFeedings}}</td>
-      <td class="col-xl-2">{{day.milkVolumeAverageMilliliters}}</td>
-      <td class="col-xl-2">{{day.milkVolumeTotalMilliliters}}</td>
+      <td class="col-xl-2">{{day.milkVolumeAverageMilliliters}}ml / {{day.milkVolumeAverageOunces}}oz</td>
+      <td class="col-xl-2">{{day.milkVolumeTotalMilliliters}}ml / {{day.milkVolumeTotalOunces}}oz</td>
       <td class="col-xl-2">{{day.diaperCount}}</td>
       <td class="col-xl-2">{{day.nursingDurationMinutes}}</td>
     </tr>

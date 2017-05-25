@@ -40,6 +40,7 @@ export class FeedingSummariesByTimeComponent implements OnInit {
       });
     });
 
+    // experiment with a different type of plot ( ... maybe a bar chart?)
     series.push({
       data: _.map(feedings[0].feedings, 'milkVolumeAverageMilliliters'),
       name: 'Daily Average',
