@@ -3,6 +3,7 @@ import {ActivatedRoute, Params} from '@angular/router';
 
 import {FeedingService} from "./feeding.service";
 import {FeedingSummary} from "./feeding-summary";
+import * as _ from "lodash";
 
 @Component({
   moduleId: module.id,
@@ -12,9 +13,8 @@ import {FeedingSummary} from "./feeding-summary";
 })
 export class FeedingsByDayComponent implements OnInit {
   @Input() feedingSummary: FeedingSummary;
-  @Output() close = new EventEmitter();
-  error: any;
-  navigated = false; // true if navigated here
+  chartOptions: Object;
+  showChart: boolean;
 
   constructor(private feedingService: FeedingService,
               private route: ActivatedRoute) {
@@ -24,11 +24,33 @@ export class FeedingsByDayComponent implements OnInit {
     this.route.params.forEach((params: Params) => {
       if (params['id'] !== undefined) {
         let id = params['id'];
-        this.navigated = true;
         // should be getFeedingSummary(id)
         this.feedingService.getFeedingsForDay(id)
           .then(feedingSummary => {
             this.feedingSummary = feedingSummary;
+
+            this.chartOptions = {
+              chart: {
+                type: 'line'
+              },
+              title: {
+                text: 'Consumption per Feeding'
+              },
+              xAxis: {
+                categories: _.map(feedingSummary.feedings, 'time')
+              },
+              yAxis: {
+                title: {
+                  text: 'Volume (ml)'
+                }
+              },
+              series: [
+                {data: _.map(feedingSummary.feedings, 'milkVolumeMilliliters'), name: 'Volume (ml)'}
+              ]
+            };
+
+            this.showChart = true;
+
           });
       }
     });

@@ -1,4 +1,8 @@
 <div *ngIf="feedingSummary">
+  <div class="container" style="height: 400px">
+    <div [ng2-highcharts]="chartOptions" *ngIf="showChart"></div>
+  </div>
+
   <div class="container">
     <table class="table table-hover table-striped table-fixed">
       <thead class="thead-default">
