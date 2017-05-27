@@ -1,11 +1,26 @@
-<div *ngIf="feedingAggregate">
-  <h2>{{feedingAggregate.date}} details!</h2>
-  <!--<div>-->
-    <!--<label>id: </label>{{hero.id}}</div>-->
-  <!--<div>-->
-    <!--<label>name: </label>-->
-    <!--<input [(ngModel)]="hero.name" placeholder="name" />-->
-  <!--</div>-->
-  <!--<button (click)="goBack()">Back</button>-->
-  <!--<button (click)="save()">Save</button>-->
+<div *ngIf="feedingSummary">
+  <div class="container">
+    <table class="table table-hover table-striped table-fixed">
+      <thead class="thead-default">
+      <tr>
+        <th class="col-xl-2">Date</th>
+        <th class="col-xl-2">Time</th>
+        <th class="col-xl-2">Volume</th>
+        <th class="col-xl-2">Temperature</th>
+        <th class="col-xl-2">Diapers</th>
+        <th class="col-xl-2">Nursing (min)</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let feeding of feedingSummary.feedings">
+        <td class="col-xl-2">{{feeding.date}}</td>
+        <td class="col-xl-2">{{feeding.time}}</td>
+        <td class="col-xl-2">{{feeding.milkVolumeMilliliters}}ml ({{feeding.milkType}})</td>
+        <td class="col-xl-2">{{feeding.bodyTemperature}}</td>
+        <td class="col-xl-2">{{feeding.diaperTypes}}</td>
+        <td class="col-xl-2">{{feeding.nursingDurationMinutes}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

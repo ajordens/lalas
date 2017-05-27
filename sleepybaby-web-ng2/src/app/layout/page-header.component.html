@@ -10,7 +10,7 @@
       <div>
         <div class="btn-group">
           <button type="button"
-                  [ngClass]="currentRoute.startsWith('/dashboard/feedings') ? 'btn-primary' : 'btn-secondary'"
+                  [ngClass]="(currentRoute.startsWith('/dashboard/feedings') || currentRoute.startsWith('/days')) ? 'btn-primary' : 'btn-secondary'"
                   class="btn dropdown-toggle"
                   data-toggle="dropdown"
                   aria-haspopup="true"

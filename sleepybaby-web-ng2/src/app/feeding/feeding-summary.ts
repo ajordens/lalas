@@ -1,3 +1,5 @@
+import {Feeding} from "./feeding";
+
 export class FeedingSummary {
   date: string;
   numberOfFeedings: number;
@@ -5,4 +7,6 @@ export class FeedingSummary {
   milkVolumeAverageMilliliters: number;
   diaperCount: number;
   nursingDurationMinutes: number;
+
+  feedings: Array<Feeding>;
 }

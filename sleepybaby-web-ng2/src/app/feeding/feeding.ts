@@ -5,6 +5,7 @@ export class Feeding {
   milkType: string;
   bodyTemperature: number;
   diaperCount: number;
+  diaperTypes: Array<string>;
   nursingDurationMinutes: number;
   notes: string;
 }

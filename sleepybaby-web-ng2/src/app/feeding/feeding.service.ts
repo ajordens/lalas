@@ -30,6 +30,28 @@ export class FeedingService {
       .catch(this.handleError.bind(this));
   }
 
+  getFeedingsForDay(date): Promise<FeedingSummary> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+
+    let currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      headers.append('Authorization', JSON.parse(currentUser).token)
+    }
+
+    return this.http
+      .get(this.feedingsUrl + '/byDay/' + date, {'headers': headers})
+      .toPromise()
+      .then(res => {
+        let result = res.json().result;
+        let summary = result.feedingSummaryByDay;
+        summary.feedings = result.feedings;
+        return summary;
+      })
+      .catch(this.handleError.bind(this));
+  }
+
   getFeedingsByTime(): Promise<Array<FeedingSummary>> {
     let headers = new Headers({
       'Content-Type': 'application/json'

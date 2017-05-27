@@ -8,7 +8,7 @@ import {FeedingSummary} from "./feeding-summary";
   moduleId: module.id,
   selector: 'my-feeding-aggregate',
   templateUrl: './feedings-byDay.component.html',
-  styleUrls: ['./feedings-byDay.component.css']
+  styleUrls: ['./feedings-byDay.component.scss']
 })
 export class FeedingsByDayComponent implements OnInit {
   @Input() feedingSummary: FeedingSummary;
@@ -23,11 +23,13 @@ export class FeedingsByDayComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.forEach((params: Params) => {
       if (params['id'] !== undefined) {
-        let id = +params['id'];
+        let id = params['id'];
         this.navigated = true;
-        // getDailyFeeding(id);
-        this.feedingService.getFeedingsByDay()
-          .then(feedings => this.feedingSummary = feedings[0]);
+        // should be getFeedingSummary(id)
+        this.feedingService.getFeedingsForDay(id)
+          .then(feedingSummary => {
+            this.feedingSummary = feedingSummary;
+          });
       }
     });
   }

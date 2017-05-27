@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import {LoginComponent} from "./user/login.component";
-import {FeedingSummariesByDayComponent} from "./feeding/feeding-summaries-byDay.component";
+import {FeedingsByDayComponent} from "./feeding/feedings-byDay.component";
 
 const routes: Routes = [
   {
@@ -17,7 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'days/:id',
-    component: FeedingSummariesByDayComponent
+    component: FeedingsByDayComponent
   },
   {
     path: 'login',

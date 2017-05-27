@@ -114,7 +114,22 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
     // validate that `date` has feedings
 
     val feedingsByDay = feedingDataSource.feedingsByDay(hour)
-    return GenericResponse.ok(Pair("feedings", feedingsByDay.getOrDefault(date, emptyList())))
+    val feedingsForDay = feedingsByDay.getOrDefault(date, emptyList())
+
+    val feedingSummaryForDay = FeedingSummaryByDay(
+      date,
+      feedingsForDay.size,
+      feedingsForDay.sumBy { it.milkVolumeMilliliters },
+      feedingsForDay.sumBy { it.diaperTypes.size },
+      feedingsForDay.sumBy { it.nursingDurationMinutes }
+    )
+
+    return GenericResponse.ok(
+      mapOf(
+        Pair("feedings", feedingsByDay.getOrDefault(date, emptyList())),
+        Pair("feedingSummaryByDay", feedingSummaryForDay)
+      )
+    )
   }
 
   private fun determineCurrentIndex(feedingTimes: List<String?>, currentTime: String): Int {
