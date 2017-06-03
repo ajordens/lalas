@@ -17,6 +17,9 @@
 package org.jordens.sleepybaby.feeding
 
 import org.jordens.sleepybaby.*
+import org.jordens.sleepybaby.ext.format
+import org.jordens.sleepybaby.ext.parseDate
+import org.jordens.sleepybaby.ext.yesterday
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -111,8 +114,6 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
   @GetMapping("/byDay/{date}")
   fun forDate(@PathVariable(value = "date") date: String,
               @RequestParam(value = "hour", required = false, defaultValue = "10:00") hour: String): GenericResponse {
-    // validate that `date` has feedings
-
     val feedingsByDay = feedingDataSource.feedingsByDay(hour)
     val feedingsForDay = feedingsByDay.getOrDefault(date, emptyList())
 
@@ -124,9 +125,12 @@ class FeedingController @Autowired constructor(val feedingDataSource: FeedingDat
       feedingsForDay.sumBy { it.nursingDurationMinutes }
     )
 
+    val previous = parseDate("yyyy-MM-dd", date).yesterday().format("yyyy-MM-dd")
+
     return GenericResponse.ok(
       mapOf(
         Pair("feedings", feedingsByDay.getOrDefault(date, emptyList())),
+        Pair("feedingsPrevious", feedingsByDay.getOrDefault(previous, emptyList())),
         Pair("feedingSummaryByDay", feedingSummaryForDay)
       )
     )

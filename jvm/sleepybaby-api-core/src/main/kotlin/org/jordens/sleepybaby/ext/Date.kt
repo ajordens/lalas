@@ -23,6 +23,11 @@ import java.util.concurrent.TimeUnit
 fun parseDate(format: String, input: String) : Date = SimpleDateFormat(format).parse(input)
 fun formatDate(format: String, input: Date) : String = SimpleDateFormat(format).format(input)
 
-fun Date.minus(days: Long): Date = Date(this.time - TimeUnit.DAYS.toMillis(days))
+fun Date.format(format: String) : String = formatDate(format, this)
+fun Date.minusDays(days: Long): Date = Date(this.time - TimeUnit.DAYS.toMillis(days))
+fun Date.diffDays(input: Date) : Long {
+  val difference = Math.abs(this.time - input.time)
+  return TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS)
+}
 
-fun Date.yesterday(): Date = this.minus(1)
+fun Date.yesterday(): Date = this.minusDays(1)
