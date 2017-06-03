@@ -58,6 +58,15 @@ export class FeedingSummariesByDayComponent implements OnInit {
   private refresh(feedings): void {
     feedings = _.orderBy(feedings, ['date'], ['asc']);
 
+    let series = [];
+
+    let groupings = _.groupBy(feedings, 'numberOfFeedings');
+    _.forEach(groupings, function (value, key) {
+        series.push({data: _.map(value, function(v: FeedingSummary) {
+          return [_.indexOf(feedings, v), v.milkVolumeAverageMilliliters];
+        }), name: key + ' - Average Volume (ml)'})
+    });
+
     this.chartOptions = {
       chart: {
         type: 'line'
@@ -73,9 +82,7 @@ export class FeedingSummariesByDayComponent implements OnInit {
           text: 'Volume (ml)'
         }
       },
-      series: [
-        {data: _.map(feedings, 'milkVolumeAverageMilliliters'), name: 'Average Volume (ml)'}
-      ]
+      series: series
     };
 
     this.showChart = true;
