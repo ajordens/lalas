@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {FeedingService} from "./feeding.service";
 
 import * as _ from "lodash";
+import {Feeding} from "./feeding";
 
 @Component({
   moduleId: module.id,
@@ -34,7 +35,13 @@ export class FeedingSummariesByTimeComponent implements OnInit {
 
     feedings.forEach(function (feeding, i) {
       series.push({
-        data: _.map(feeding.feedings, 'milkVolumeMilliliters'),
+        data: _.map(feeding.feedings, function (feeding: Feeding, i) {
+          return {
+            x: i,
+            y: feeding.milkVolumeMilliliters,
+            'feeding': feeding
+          }
+        }),
         name: 'Feeding #' + (i + 1),
         visible: feeding.current
       });
@@ -62,9 +69,27 @@ export class FeedingSummariesByTimeComponent implements OnInit {
           text: 'Volume (ml)'
         }
       }],
+      tooltip: {
+        formatter: function () {
+          let time = function(data, x) {
+            return (<FeedingPoint> _.find(data, {category: x})).feeding.time;
+          };
+
+          if (this.series.data[0].feeding) {
+            return '<b>' + this.y + 'ml</b> at <b>' + time(this.series.data, this.x) + '</b> (' + this.series.name + ')';
+          }
+
+          return '<b>' + this.y + 'ml</b> (' + this.series.name + ')';
+        }
+      },
       series: series
     };
 
     this.showChart = true;
   }
+}
+
+interface FeedingPoint {
+  category: number;
+  feeding: Feeding;
 }
