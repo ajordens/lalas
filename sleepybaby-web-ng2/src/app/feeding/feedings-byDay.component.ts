@@ -42,7 +42,8 @@ export class FeedingsByDayComponent implements OnInit {
               yAxis: {
                 title: {
                   text: 'Volume (ml)'
-                }
+                },
+                min: 0
               },
               series: [
                 {data: _.map(feedingSummary.feedings, 'milkVolumeMilliliters'), name: 'Volume (ml)'}
