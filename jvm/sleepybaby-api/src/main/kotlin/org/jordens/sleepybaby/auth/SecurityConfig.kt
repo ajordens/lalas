@@ -25,7 +25,9 @@ class SecurityConfig @Autowired constructor(val jwtConfigurationProperties: JWTC
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
     }
 
-    val tokenAuthenticationService = TokenAuthenticationService(jwtConfigurationProperties)
+    val tokenAuthenticationService = TokenAuthenticationService(
+      jwtConfigurationProperties.secret, jwtConfigurationProperties.expiration
+    )
 
     http
       .authorizeRequests()
