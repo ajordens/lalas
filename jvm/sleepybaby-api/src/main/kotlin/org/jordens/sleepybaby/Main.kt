@@ -16,18 +16,33 @@
 
 package org.jordens.sleepybaby
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
 
 @SpringBootApplication
 @EnableScheduling
 @EnableConfigurationProperties(
-  FeedingsConfigurationProperties::class,
+  FeedingConfigurationProperties::class,
   JWTConfigurationProperties::class
 )
-open class Main
+class Main {
+  @Bean
+  fun feedingDataSource(feedingConfigurationProperties: FeedingConfigurationProperties): FeedingDataSource {
+    return FeedingDataSource(feedingConfigurationProperties.sourceAsUrl())
+  }
+}
+
+@Configuration
+class MainConfiguration @Autowired constructor(val feedingDataSource: FeedingDataSource)  {
+  @Scheduled(fixedRate = 300000)
+  fun refreshFeedingDataSource() = feedingDataSource.refresh()
+}
 
 fun main(args: Array<String>) {
   SpringApplication.run(Main::class.java, *args)

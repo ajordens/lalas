@@ -20,7 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URL
 
 @ConfigurationProperties(prefix = "feedings")
-data class FeedingsConfigurationProperties(var source: String = "", var name: String = "") {
+data class FeedingConfigurationProperties(var source: String = "", var name: String = "") {
   fun sourceAsUrl() = URL(source)
 }
 

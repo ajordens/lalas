@@ -16,7 +16,7 @@
 
 package org.jordens.sleepybaby.user
 
-import org.jordens.sleepybaby.FeedingsConfigurationProperties
+import org.jordens.sleepybaby.FeedingConfigurationProperties
 import org.jordens.sleepybaby.GenericResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/users")
-class UserController @Autowired constructor(val configurationProperties: FeedingsConfigurationProperties) {
+class UserController @Autowired constructor(val configurationProperties: FeedingConfigurationProperties) {
   @GetMapping("/me")
   fun me(): GenericResponse = GenericResponse.ok(Pair("me", UserDetails(configurationProperties.name)))
 }

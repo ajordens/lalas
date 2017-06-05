@@ -19,16 +19,13 @@ package org.jordens.sleepybaby
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.stereotype.Component
 import java.io.StringReader
+import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.atomic.AtomicReference
 
-@Component
-class FeedingDataSource @Autowired constructor(val configuration: FeedingsConfigurationProperties) {
+class FeedingDataSource(val sourceUrl: URL) {
   private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
   private val logger = LoggerFactory.getLogger(FeedingDataSource::class.java)
   private val feedings: AtomicReference<List<Feeding>> = AtomicReference(emptyList())
@@ -48,9 +45,7 @@ class FeedingDataSource @Autowired constructor(val configuration: FeedingsConfig
     }
   }
 
-  @Scheduled(fixedRate = 300000)
-  fun fetchFeedings() {
-    val sourceUrl = configuration.sourceAsUrl()
+  fun refresh() {
     logger.info("Fetching feedings from $sourceUrl")
 
     val column = { record: CSVRecord, columnName: String ->
