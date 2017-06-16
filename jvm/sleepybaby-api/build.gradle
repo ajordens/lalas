@@ -5,12 +5,14 @@ buildscript {
   dependencies {
     classpath("org.springframework.boot:spring-boot-gradle-plugin:${versions.springBoot}")
     classpath("com.netflix.nebula:gradle-ospackage-plugin:${versions.nebulaOsPackage}")
+    classpath("org.jetbrains.kotlin:kotlin-allopen:${versions.kotlin}")
   }
 }
 
 apply plugin: 'org.springframework.boot'
 apply plugin: 'nebula.ospackage'
 apply plugin: 'application'
+apply plugin: 'kotlin-spring'
 
 dependencies {
   compile project(':jvm:sleepybaby-api-core')
@@ -19,6 +21,7 @@ dependencies {
   compile('org.springframework.boot:spring-boot-starter-web')
 
   compile('com.fasterxml.jackson.module:jackson-module-kotlin:2.8.7')
+  compile('net.logstash.logback:logstash-logback-encoder:4.10')
 
   testCompile('org.springframework.boot:spring-boot-starter-test')
   testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
