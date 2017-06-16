@@ -33,6 +33,7 @@ class SecurityConfig @Autowired constructor(val jwtConfigurationProperties: JWTC
       .authorizeRequests()
       .antMatchers("/**/*.js", "/**/*.css").permitAll()
       .antMatchers("/api/login").permitAll()
+      .antMatchers("/api/ping").permitAll()
       .anyRequest().authenticated()
       .and()
       .httpBasic().authenticationEntryPoint(entryPoint)
