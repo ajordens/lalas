@@ -21,8 +21,14 @@ class JWTAuthenticationFilter(val tokenAuthenticationService: TokenAuthenticatio
 
     if (token != null) {
       val user = tokenAuthenticationService.getUser(token)
-      val authentication = UsernamePasswordAuthenticationToken(user, null, emptyList())
 
+      // user will be null if jwt token is expired (or it's otherwise invalid)
+      var authentication : UsernamePasswordAuthenticationToken? = null
+      if (user != null) {
+        authentication = UsernamePasswordAuthenticationToken(user, null, emptyList())
+      }
+
+      // if authentication is null, user will be prompted to re-login
       SecurityContextHolder.getContext().authentication = authentication
     }
 
