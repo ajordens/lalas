@@ -13,7 +13,7 @@
   "provisioners": [
     {
       "destination": "/tmp",
-      "source": "./sleepybaby-api/build/distributions/",
+      "source": "../jvm/sleepybaby-api/build/distributions/",
       "type": "file"
     },
     {
