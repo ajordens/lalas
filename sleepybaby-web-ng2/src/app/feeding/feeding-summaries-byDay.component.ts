@@ -62,26 +62,47 @@ export class FeedingSummariesByDayComponent implements OnInit {
 
     let groupings = _.groupBy(feedings, 'numberOfFeedings');
     _.forEach(groupings, function (value, key) {
-        series.push({data: _.map(value, function(v: FeedingSummary) {
+      series.push({
+        data: _.map(value, function (v: FeedingSummary) {
           return [_.indexOf(feedings, v), v.milkVolumeAverageMilliliters];
-        }), name: key + ' - Average Volume (ml)'})
+        }),
+        name: key + ' Feedings',
+        type: 'column'
+      })
+    });
+
+    series.push({
+      data: _.map(feedings, function (v: FeedingSummary) {
+        return [_.indexOf(feedings, v), v.milkVolumeTotalMilliliters];
+      }),
+      name: 'Total Daily Volume',
+      type: 'line',
+      yAxis: 1
     });
 
     this.chartOptions = {
-      chart: {
-        type: 'line'
-      },
       title: {
         text: 'Consumption per Day'
       },
       xAxis: {
         categories: _.map(feedings, 'date')
       },
-      yAxis: {
-        title: {
-          text: 'Volume (ml)'
+      yAxis: [
+        {
+          title: {
+            text: 'Per Feeding Volume (ml)'
+          },
+          min: 0,
+          max: 240
+        },
+        {
+          title: {
+            text: 'Daily Volume (ml)'
+          },
+          opposite: true,
+          max: 1200
         }
-      },
+      ],
       series: series
     };
 

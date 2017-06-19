@@ -76,10 +76,10 @@ export class FeedingSummariesByTimeComponent implements OnInit {
           };
 
           if (this.series.data[0].feeding) {
-            return '<b>' + this.y + 'ml</b> at <b>' + time(this.series.data, this.x) + '</b> (' + this.series.name + ')';
+            return '<span style="font-size: 10px">' + this.x + '</span><br/><b>' + this.y + 'ml</b> at <b>' + time(this.series.data, this.x) + '</b> (' + this.series.name + ')';
           }
 
-          return '<b>' + this.y + 'ml</b> (' + this.series.name + ')';
+          return '<span style="font-size: 10px">' + this.x + '</span><br/><b>' + this.y + 'ml</b> (' + this.series.name + ')';
         }
       },
       series: series
